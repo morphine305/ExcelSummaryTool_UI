@@ -77,19 +77,131 @@ namespace ExcelSummaryTool
             }
             return specify_data;
         }
-        private void Tab1_Result_Table()
+        private void Tab1_Result_Table(out object[,] Tab1_array)
         {
             #region 參數
-            int sheet_index = Convert.ToInt32(Tab1_Sheet_tb.Text);
+            int sheet_index = Convert.ToInt32(Tab1_Sheet_tb.Text)-1;
             int column_index = ExcelColumnToNumber(Tab1_Column_tb.Text);
+            #endregion
+            #region Get BeforeUnderfill 
+            List<DataDetail> BUF_data_list = new List<DataDetail>();
+            foreach (var file in SiganalBeforeUnderFill_FileList)
+            {
+                DataDetail tmp = new DataDetail(); 
+                object[] BUF_data_array;
+                BUF_data_array = GetSpecifyDataArray((object[,,])file.Data,sheet_index,column_index);
+                tmp.Data = BUF_data_array;
+                tmp.SN = file.SN;
+                BUF_data_list.Add(tmp);
+            }
+            #endregion
+
+            #region Get AfterUnderfill 
+            List<DataDetail> AUF_data_list = new List<DataDetail>();
+            foreach (var file in SiganalAfterUnderFill_FileList)
+            {
+                DataDetail tmp = new DataDetail();
+                object[] AUF_data_array;
+                AUF_data_array = GetSpecifyDataArray((object[,,])file.Data, sheet_index, column_index);
+                tmp.Data = AUF_data_array;
+                tmp.SN = file.SN;
+                AUF_data_list.Add(tmp);
+            }
+            #endregion
+
+            #region Calculation
+            var dictBUF = BUF_data_list.ToDictionary(d => d.SN);
+            var dictAUF = AUF_data_list.ToDictionary(d => d.SN);
+            List<DataDetail> diffList = new List<DataDetail>();
+
+            foreach (var sn in dictBUF.Keys)
+            {
+                if (dictAUF.ContainsKey(sn))
+                {
+                    var dataBUF = dictBUF[sn].Data;
+                    var dataAUF = dictAUF[sn].Data;
+                    int len = Math.Min(dataBUF.Length, dataAUF.Length);
+                    object[] diff = new object[len];
+                    diff[0] = dataBUF[0];
+
+                    for (int i = 1; i < len; i++)
+                    {
+                        double valBUF = dataBUF[i] != null ? Convert.ToDouble(dataBUF[i]) : 0;
+                        double valAUF = dataAUF[i] != null ? Convert.ToDouble(dataAUF[i]) : 0;
+                        diff[i] = valBUF - valAUF;
+                    }
+
+                    diffList.Add(new DataDetail { SN = sn, Data = diff });
+                }
+            }
+            #endregion
+            #region Merge by SN
+            // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
+            int colCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
+
+            // Y 軸 = 資料最大長度
+            int rowCount = Math.Max(
+                BUF_data_list.Count > 0 ? BUF_data_list.Max(d => d.Data.Length) : 0,
+                Math.Max(
+                    AUF_data_list.Count > 0 ? AUF_data_list.Max(d => d.Data.Length) : 0,
+                    diffList.Count > 0 ? diffList.Max(d => d.Data.Length) : 0
+                )
+            );
+
+
+            object[,] result_array = new object[rowCount, colCount];
+
+            // 塞 BUF (第一段欄)
+            for (int c = 0; c < BUF_data_list.Count; c++)
+            {
+                var data = BUF_data_list[c].Data;
+                for (int r = 0; r < data.Length; r++)
+                    result_array[r, c] = data[r];
+            }
+
+            // 塞 AUF (空 2 欄後)
+            int aufStart = BUF_data_list.Count + 2;
+            for (int c = 0; c < AUF_data_list.Count; c++)
+            {
+                var data = AUF_data_list[c].Data;
+                for (int r = 0; r < data.Length; r++)
+                    result_array[r, aufStart + c] = data[r];
+            }
+
+            // 塞 Diff (空 2 + BUF長 + 2 + AUF長)
+            int diffStart = BUF_data_list.Count + 2 + AUF_data_list.Count + 2;
+            for (int c = 0; c < diffList.Count; c++)
+            {
+                var data = diffList[c].Data;
+                for (int r = 0; r < data.Length; r++)
+                {
+                    if (data[r] is string)
+                    {
+                        result_array[r, diffStart + c] = data[r]; // 保留原字串
+                    }
+                    else
+                    {
+                        double val = Convert.ToDouble(data[r]);
+                        result_array[r, diffStart + c] = (val == 0) ? null : (object)val;
+                    }
+                }
+            }
+            #endregion
+            Tab1_array = result_array;
+        }
+        private void Tab2_Result_Table(out object[,] Tab2_array)
+        {
+            #region 參數
+            int sheet_index = Convert.ToInt32(Tab2_Sheet_tb.Text) - 1;
+            int column_index = ExcelColumnToNumber(Tab2_Column_tb.Text);
             #endregion
             #region Get BeforeUnderfill 
             List<DataDetail> BUF_data_list = new List<DataDetail>();
             foreach (var file in NoiseBeforeUnderFill_FileList)
             {
-                DataDetail tmp = new DataDetail(); 
+                DataDetail tmp = new DataDetail();
                 object[] BUF_data_array;
-                BUF_data_array = GetSpecifyDataArray((object[,,])file.Data,sheet_index,column_index);
+                BUF_data_array = GetSpecifyDataArray((object[,,])file.Data, sheet_index, column_index);
                 tmp.Data = BUF_data_array;
                 tmp.SN = file.SN;
                 BUF_data_list.Add(tmp);
@@ -110,120 +222,130 @@ namespace ExcelSummaryTool
             #endregion
 
             #region Calculation
-            var dict1 = BUF_data_list.ToDictionary(d => d.SN);
-            var dict2 = AUF_data_list.ToDictionary(d => d.SN);
-
+            var dictBUF = BUF_data_list.ToDictionary(d => d.SN);
+            var dictAUF = AUF_data_list.ToDictionary(d => d.SN);
             List<DataDetail> diffList = new List<DataDetail>();
 
-            foreach (var sn in dict1.Keys)
+            foreach (var sn in dictBUF.Keys)
             {
-                if (dict2.ContainsKey(sn))
+                if (dictAUF.ContainsKey(sn))
                 {
-                    var data1 = dict1[sn].Data;
-                    var data2 = dict2[sn].Data;
-
-                    // 確保長度一致
-                    int len = Math.Min(data1.Length, data2.Length);
+                    var dataBUF = dictBUF[sn].Data;
+                    var dataAUF = dictAUF[sn].Data;
+                    int len = Math.Min(dataBUF.Length, dataAUF.Length);
                     object[] diff = new object[len];
+                    diff[0] = dataBUF[0];
 
-                    for (int i = 0; i < len; i++)
+                    for (int i = 1; i < len; i++)
                     {
-                        double val1 = data1[i] != null ? Convert.ToDouble(data1[i]) : 0;
-                        double val2 = data2[i] != null ? Convert.ToDouble(data2[i]) : 0;
-                        diff[i] = val1 - val2;
+                        double valBUF = dataBUF[i] != null ? Convert.ToDouble(dataBUF[i]) : 0;
+                        double valAUF = dataAUF[i] != null ? Convert.ToDouble(dataAUF[i]) : 0;
+                        diff[i] = valBUF - valAUF;
                     }
 
-                    diffList.Add(new DataDetail
-                    {
-                        SN = sn,
-                        Data = diff
-                    });
+                    diffList.Add(new DataDetail { SN = sn, Data = diff });
                 }
             }
             #endregion
+            #region Merge by SN
+            // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
+            int colCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
 
-            #region Merge to ExcelSheet
-            
-            int buf_rowCount = BUF_data_list.Max(d => d.Data.Length); // 取最高的列數
-            int buf_colCount = BUF_data_list.Count;                  // 每個 Data 一欄
+            // Y 軸 = 資料最大長度
+            int rowCount = Math.Max(
+                BUF_data_list.Count > 0 ? BUF_data_list.Max(d => d.Data.Length) : 0,
+                Math.Max(
+                    AUF_data_list.Count > 0 ? AUF_data_list.Max(d => d.Data.Length) : 0,
+                    diffList.Count > 0 ? diffList.Max(d => d.Data.Length) : 0
+                )
+            );
 
-            object[,] buf2D = new object[buf_rowCount, buf_colCount];
 
-            for (int c = 0; c < buf_colCount; c++)
+            object[,] result_array = new object[rowCount, colCount];
+
+            // 塞 BUF (第一段欄)
+            for (int c = 0; c < BUF_data_list.Count; c++)
             {
                 var data = BUF_data_list[c].Data;
                 for (int r = 0; r < data.Length; r++)
-                {
-                    buf2D[r, c] = data[r]; // row = Data 的元素索引, column = DataDetail 的索引
-                }
+                    result_array[r, c] = data[r];
             }
-            int auf_rowCount = AUF_data_list.Max(d => d.Data.Length); // 取最高的列數
-            int auf_colCount = AUF_data_list.Count;                  // 每個 Data 一欄
 
-            object[,] auf2D = new object[auf_rowCount, auf_colCount];
-
-            for (int c = 0; c < auf_colCount; c++)
+            // 塞 AUF (空 2 欄後)
+            int aufStart = BUF_data_list.Count + 2;
+            for (int c = 0; c < AUF_data_list.Count; c++)
             {
                 var data = AUF_data_list[c].Data;
                 for (int r = 0; r < data.Length; r++)
-                {
-                    auf2D[r, c] = data[r]; // row = Data 的元素索引, column = DataDetail 的索引
-                }
+                    result_array[r, aufStart + c] = data[r];
             }
-            int diff_rowCount = diffList.Max(d => d.Data.Length); // 取最高的列數
-            int diff_colCount = diffList.Count;                  // 每個 Data 一欄
 
-            object[,] diff2D = new object[diff_rowCount, diff_colCount];
-
-            for (int c = 0; c < diff_colCount; c++)
+            // 塞 Diff (空 2 + BUF長 + 2 + AUF長)
+            int diffStart = BUF_data_list.Count + 2 + AUF_data_list.Count + 2;
+            for (int c = 0; c < diffList.Count; c++)
             {
                 var data = diffList[c].Data;
                 for (int r = 0; r < data.Length; r++)
                 {
-                    diff2D[r, c] = data[r]; // row = Data 的元素索引, column = DataDetail 的索引
-                }
-            }
-            int totalRowCount = Math.Max(buf_rowCount, Math.Max(auf_rowCount, diff_rowCount));
-            int totalColCount = buf_colCount + auf_colCount + diff_colCount;
-
-            object[,] result_array = new object[totalRowCount, totalColCount];
-            // 塞 BUF
-            for (int r = 0; r < buf_rowCount; r++)
-            {
-                for (int c = 0; c < buf_colCount; c++)
-                {
-                    result_array[r, c] = buf2D[r, c];
-                }
-            }
-
-            // 塞 AUF
-            for (int r = 0; r < auf_rowCount; r++)
-            {
-                for (int c = 0; c < auf_colCount; c++)
-                {
-                    result_array[r, buf_colCount + c] = auf2D[r, c];
-                }
-            }
-
-            // 塞 diff
-            for (int r = 0; r < diff_rowCount; r++)
-            {
-                for (int c = 0; c < diff_colCount; c++)
-                {
-                    result_array[r, buf_colCount + auf_colCount + c] = diff2D[r, c];
+                    if (data[r] is string)
+                    {
+                        result_array[r, diffStart + c] = data[r]; // 保留原字串
+                    }
+                    else
+                    {
+                        double val = Convert.ToDouble(data[r]);
+                        result_array[r, diffStart + c] = (val == 0) ? null : (object)val;
+                    }
                 }
             }
             #endregion
+            Tab2_array = result_array;
+
         }
-        private void CreateExcelTable()
+        private bool CreateExcelTable(object[,] data1, object[,] data2)
         {
-            using (var package = new ExcelPackage())
-            {
-                var worksheet = package.Workbook.Worksheets.Add("Summary");
-                
-                var fileInfo = new FileInfo("Summary.xlsx");
-                package.SaveAs(fileInfo);
+            try {
+                using (SaveFileDialog sfd = new SaveFileDialog())
+                {
+                    sfd.Filter = "Excel Files (*.xlsx)|*.xlsx";
+                    sfd.Title = "選擇輸出路徑";
+                    sfd.FileName = "Summary.xlsx";
+
+                    if (sfd.ShowDialog() != DialogResult.OK)
+                        return false;
+
+                    using (var package = new ExcelPackage())
+                    {
+                        var ws1 = package.Workbook.Worksheets.Add("Signal");
+                        ws1.Cells[1, 1].LoadFromArrays(ToJaggedArray(data1));
+
+                        var ws2 = package.Workbook.Worksheets.Add("Noise");
+                        ws2.Cells[1, 1].LoadFromArrays(ToJaggedArray(data2));
+
+                        package.SaveAs(new FileInfo(sfd.FileName));
+                    }
+                }
             }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            
+            return true;
+        }
+
+        private static object[][] ToJaggedArray(object[,] source)
+        {
+            int rows = source.GetLength(0);
+            int cols = source.GetLength(1);
+            var result = new object[rows][];
+            for (int i = 0; i < rows; i++)
+            {
+                result[i] = new object[cols];
+                for (int j = 0; j < cols; j++)
+                    result[i][j] = source[i, j];
+            }
+            return result;
         }
         #endregion
         #region UI_Events
@@ -253,22 +375,22 @@ namespace ExcelSummaryTool
                     fileDetail.FilePath = folderBrowserDialog.SelectedPath;
                     fileDetail.FIleName = files[i];
                     fileDetail.Data = await Task.Run(() => ReadExcelData(files[i]));
-                    //fileDetail.SN = 每個檔案的SN序號
+                    fileDetail.SN = SelectFileName_SN(files[i]);
                     file_list.Add(fileDetail);
                 }
                 Console.WriteLine($"TextBox:{uITextBox.Name},Path:{uITextBox.Text},ReadFileListData Done");
                 switch (uITextBox.Name)
                 {
-                    case "uiTextBox1":
+                    case "uiTextBox3":
                         NoiseBeforeUnderFill_FileList = file_list;
                         break;
-                    case "uiTextBox2":
+                    case "uiTextBox4":
                         NoiseAfterUnderFill_FileList = file_list;
                         break;
-                    case "uiTextBox3":
+                    case "uiTextBox1":
                         SiganalBeforeUnderFill_FileList = file_list;
                         break;
-                    case "uiTextBox4":
+                    case "uiTextBox2":
                         SiganalAfterUnderFill_FileList = file_list;
                         break;
                 }
@@ -276,7 +398,26 @@ namespace ExcelSummaryTool
         }
         private void Start_Bt_Click(object sender, EventArgs e)
         {
-
+            if (string.IsNullOrEmpty(Tab1_Sheet_tb.Text) || string.IsNullOrEmpty(Tab1_Column_tb.Text))
+            {
+                UIMessageBox.Show("tabpage1 參數未填寫");
+                return;
+            }
+            if (string.IsNullOrEmpty(Tab2_Sheet_tb.Text) || string.IsNullOrEmpty(Tab2_Column_tb.Text))
+            {
+                UIMessageBox.Show("tabpage2 參數未填寫");
+                return;
+            }
+            Tab1_Result_Table(out object[,] tab1_array);
+            Tab2_Result_Table(out object[,] tab2_array);
+            if(CreateExcelTable(tab1_array, tab2_array))
+            {
+                UIMessageBox.Show("資料輸出完成!!");
+            }
+            else
+            {
+                UIMessageBox.Show("資料輸出失敗!!");
+            }
         }
         #endregion
         #region Excel 小工具
@@ -295,6 +436,25 @@ namespace ExcelSummaryTool
                 sum += (column[i] - 'A' + 1);
             }
             return sum-1;
+        }
+        #endregion
+        #region 小工具
+        private string SelectFileName_SN(string FileName)
+        {
+            string name = Path.GetFileNameWithoutExtension(FileName);
+
+            // 如果檔名有三段以上，用 '_' 分割
+            var parts = name.Split('_');
+            if (parts.Length >= 3)
+            {
+                // SN + 測項 = 前兩段組合
+                return parts[0] + "_" + parts[1];
+            }
+            else
+            {
+                // 兩段直接回傳
+                return name;
+            }
         }
         #endregion
     }
