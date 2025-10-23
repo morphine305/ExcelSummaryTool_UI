@@ -77,7 +77,7 @@ namespace ExcelSummaryTool
             }
             return specify_data;
         }
-        private void Tab1_Result_Table(out object[,] Tab1_array)
+        private void Tab1_Result_Table(out object[,] Tab1_array,out List<TempData> BFS_data, out List<TempData> AUF_data)
         {
             #region 參數
             int sheet_index = Convert.ToInt32(Tab1_Sheet_tb.Text)-1;
@@ -85,6 +85,7 @@ namespace ExcelSummaryTool
             #endregion
             #region Get BeforeUnderfill 
             List<DataDetail> BUF_data_list = new List<DataDetail>();
+            BFS_data = new List<TempData>();
             foreach (var file in SiganalBeforeUnderFill_FileList)
             {
                 DataDetail tmp = new DataDetail(); 
@@ -93,11 +94,18 @@ namespace ExcelSummaryTool
                 tmp.Data = BUF_data_array;
                 tmp.SN = file.SN;
                 BUF_data_list.Add(tmp);
+                #region Prepare for SNR data
+                TempData temp = new TempData();
+                temp.objects = BUF_data_array;
+                temp.SN = file.SN;
+                BFS_data.Add(temp);
+                #endregion
             }
             #endregion
 
             #region Get AfterUnderfill 
             List<DataDetail> AUF_data_list = new List<DataDetail>();
+            AUF_data = new List<TempData>();
             foreach (var file in SiganalAfterUnderFill_FileList)
             {
                 DataDetail tmp = new DataDetail();
@@ -106,9 +114,14 @@ namespace ExcelSummaryTool
                 tmp.Data = AUF_data_array;
                 tmp.SN = file.SN;
                 AUF_data_list.Add(tmp);
+                #region Prepare for SNR data
+                TempData temp = new TempData();
+                temp.objects = AUF_data_array;
+                temp.SN = file.SN;
+                AUF_data.Add(temp);
+                #endregion
             }
             #endregion
-
             #region Calculation
             var dictBUF = BUF_data_list.ToDictionary(d => d.SN);
             var dictAUF = AUF_data_list.ToDictionary(d => d.SN);
@@ -135,9 +148,13 @@ namespace ExcelSummaryTool
                 }
             }
             #endregion
+            #region Prepare for SNR calculation
+            List<SNRData> Signal_list = new List<SNRData>();
+
+            #endregion
             #region Merge by SN
-            // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
-            int colCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
+        // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
+        int colCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
 
             // Y 軸 = 資料最大長度
             int rowCount = Math.Max(
@@ -189,7 +206,7 @@ namespace ExcelSummaryTool
             #endregion
             Tab1_array = result_array;
         }
-        private void Tab2_Result_Table(out object[,] Tab2_array)
+        private void Tab2_Result_Table(out object[,] Tab2_array,out List<TempData> BFS_data,out List<TempData> AUF_data)
         {
             #region 參數
             int sheet_index = Convert.ToInt32(Tab2_Sheet_tb.Text) - 1;
@@ -197,6 +214,7 @@ namespace ExcelSummaryTool
             #endregion
             #region Get BeforeUnderfill 
             List<DataDetail> BUF_data_list = new List<DataDetail>();
+            BFS_data = new List<TempData>();
             foreach (var file in NoiseBeforeUnderFill_FileList)
             {
                 DataDetail tmp = new DataDetail();
@@ -205,11 +223,18 @@ namespace ExcelSummaryTool
                 tmp.Data = BUF_data_array;
                 tmp.SN = file.SN;
                 BUF_data_list.Add(tmp);
+                #region Prepare for SNR data
+                TempData temp = new TempData();
+                temp.objects = BUF_data_array;
+                temp.SN = file.SN;
+                BFS_data.Add(temp);
+                #endregion
             }
             #endregion
 
             #region Get AfterUnderfill 
             List<DataDetail> AUF_data_list = new List<DataDetail>();
+            AUF_data = new List<TempData>();
             foreach (var file in NoiseAfterUnderFill_FileList)
             {
                 DataDetail tmp = new DataDetail();
@@ -218,6 +243,12 @@ namespace ExcelSummaryTool
                 tmp.Data = AUF_data_array;
                 tmp.SN = file.SN;
                 AUF_data_list.Add(tmp);
+                #region Prepare for SNR data
+                TempData temp = new TempData();
+                temp.objects = AUF_data_array;
+                temp.SN = file.SN;
+                AUF_data.Add(temp);
+                #endregion
             }
             #endregion
 
@@ -408,8 +439,8 @@ namespace ExcelSummaryTool
                 UIMessageBox.Show("tabpage2 參數未填寫");
                 return;
             }
-            Tab1_Result_Table(out object[,] tab1_array);
-            Tab2_Result_Table(out object[,] tab2_array);
+            Tab1_Result_Table(out object[,] tab1_array,out List<TempData>Signal_Before_List,out List<TempData>Signal_After_List);
+            Tab2_Result_Table(out object[,] tab2_array, out List<TempData> Noise_Before_List, out List<TempData> Noise_After_List);
             if(CreateExcelTable(tab1_array, tab2_array))
             {
                 UIMessageBox.Show("資料輸出完成!!");

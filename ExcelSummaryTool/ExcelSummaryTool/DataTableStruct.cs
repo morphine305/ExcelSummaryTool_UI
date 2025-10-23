@@ -18,4 +18,15 @@ namespace ExcelSummaryTool
         public string SN { get; set; }
         public object[] Data { get; set; }
     }
+    public class SNRData
+    {
+        public string SN {  set; get; }
+        public object[] BeforeData { set; get; }
+        public object[] AfterData { set; get; }
+    }
+    public class TempData
+    {
+        public string SN { set; get; }  
+        public object[] objects { get; set; }
+    }
 }
