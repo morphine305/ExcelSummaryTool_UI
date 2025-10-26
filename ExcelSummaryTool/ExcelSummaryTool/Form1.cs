@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -77,7 +78,7 @@ namespace ExcelSummaryTool
             }
             return specify_data;
         }
-        private void Tab1_Result_Table(out object[,] Tab1_array,out List<TempData> BFS_data, out List<TempData> AUF_data)
+        private void Tab1_Result_Table(out object[,] Tab1_array,out List<SNRData> Signal_list)
         {
             #region 參數
             int sheet_index = Convert.ToInt32(Tab1_Sheet_tb.Text)-1;
@@ -85,7 +86,7 @@ namespace ExcelSummaryTool
             #endregion
             #region Get BeforeUnderfill 
             List<DataDetail> BUF_data_list = new List<DataDetail>();
-            BFS_data = new List<TempData>();
+            List<TempData> BFS_data = new List<TempData>();
             foreach (var file in SiganalBeforeUnderFill_FileList)
             {
                 DataDetail tmp = new DataDetail(); 
@@ -105,7 +106,7 @@ namespace ExcelSummaryTool
 
             #region Get AfterUnderfill 
             List<DataDetail> AUF_data_list = new List<DataDetail>();
-            AUF_data = new List<TempData>();
+            List<TempData> AFS_data = new List<TempData>();
             foreach (var file in SiganalAfterUnderFill_FileList)
             {
                 DataDetail tmp = new DataDetail();
@@ -118,7 +119,7 @@ namespace ExcelSummaryTool
                 TempData temp = new TempData();
                 temp.objects = AUF_data_array;
                 temp.SN = file.SN;
-                AUF_data.Add(temp);
+                AFS_data.Add(temp);
                 #endregion
             }
             #endregion
@@ -149,12 +150,20 @@ namespace ExcelSummaryTool
             }
             #endregion
             #region Prepare for SNR calculation
-            List<SNRData> Signal_list = new List<SNRData>();
-
+            Signal_list = new List<SNRData>();
+            Signal_list = (from a in BFS_data
+                           join b in AFS_data on a.SN equals b.SN into gj
+                           from subB in gj.DefaultIfEmpty() // 沒對應就 subB 為 null
+                           select new SNRData
+                           {
+                               SN = a.SN,
+                               BeforeData = a.objects,
+                               AfterData = subB?.objects ?? Array.Empty<object>()  // 找不到就 null
+                           }).ToList();
             #endregion
             #region Merge by SN
-        // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
-        int colCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
+            // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
+            int colCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
 
             // Y 軸 = 資料最大長度
             int rowCount = Math.Max(
@@ -206,7 +215,7 @@ namespace ExcelSummaryTool
             #endregion
             Tab1_array = result_array;
         }
-        private void Tab2_Result_Table(out object[,] Tab2_array,out List<TempData> BFS_data,out List<TempData> AUF_data)
+        private void Tab2_Result_Table(out object[,] Tab2_array,out List<SNRData> Noise_list)
         {
             #region 參數
             int sheet_index = Convert.ToInt32(Tab2_Sheet_tb.Text) - 1;
@@ -214,7 +223,7 @@ namespace ExcelSummaryTool
             #endregion
             #region Get BeforeUnderfill 
             List<DataDetail> BUF_data_list = new List<DataDetail>();
-            BFS_data = new List<TempData>();
+            List<TempData> BFS_data = new List<TempData>();
             foreach (var file in NoiseBeforeUnderFill_FileList)
             {
                 DataDetail tmp = new DataDetail();
@@ -234,7 +243,7 @@ namespace ExcelSummaryTool
 
             #region Get AfterUnderfill 
             List<DataDetail> AUF_data_list = new List<DataDetail>();
-            AUF_data = new List<TempData>();
+            List<TempData> AFS_data = new List<TempData>();
             foreach (var file in NoiseAfterUnderFill_FileList)
             {
                 DataDetail tmp = new DataDetail();
@@ -247,7 +256,7 @@ namespace ExcelSummaryTool
                 TempData temp = new TempData();
                 temp.objects = AUF_data_array;
                 temp.SN = file.SN;
-                AUF_data.Add(temp);
+                AFS_data.Add(temp);
                 #endregion
             }
             #endregion
@@ -277,6 +286,18 @@ namespace ExcelSummaryTool
                     diffList.Add(new DataDetail { SN = sn, Data = diff });
                 }
             }
+            #endregion
+            #region Prepare for SNR calculation
+            Noise_list = new List<SNRData>();
+            Noise_list = (from a in BFS_data
+                           join b in AFS_data on a.SN equals b.SN into gj
+                           from subB in gj.DefaultIfEmpty() // 沒對應就 subB 為 null
+                           select new SNRData
+                           {
+                               SN = a.SN,
+                               BeforeData = a.objects,
+                               AfterData = subB?.objects ?? Array.Empty<object>()  // 找不到就 null
+                           }).ToList();
             #endregion
             #region Merge by SN
             // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
@@ -333,7 +354,11 @@ namespace ExcelSummaryTool
             Tab2_array = result_array;
 
         }
-        private bool CreateExcelTable(object[,] data1, object[,] data2)
+        private void SNR_Table(out object[,] Tab_SNR_Array, List<SNRData> Signal_List, List<SNRData> Noise_List)
+        {
+
+        }
+        private bool CreateExcelTable(object[,] data1, object[,] data2, object[,] data3)
         {
             try {
                 using (SaveFileDialog sfd = new SaveFileDialog())
@@ -439,8 +464,8 @@ namespace ExcelSummaryTool
                 UIMessageBox.Show("tabpage2 參數未填寫");
                 return;
             }
-            Tab1_Result_Table(out object[,] tab1_array,out List<TempData>Signal_Before_List,out List<TempData>Signal_After_List);
-            Tab2_Result_Table(out object[,] tab2_array, out List<TempData> Noise_Before_List, out List<TempData> Noise_After_List);
+            Tab1_Result_Table(out object[,] tab1_array,out List<SNRData> Signal_Data_List);
+            Tab2_Result_Table(out object[,] tab2_array, out List<SNRData> Noise_Data_List);
             if(CreateExcelTable(tab1_array, tab2_array))
             {
                 UIMessageBox.Show("資料輸出完成!!");
