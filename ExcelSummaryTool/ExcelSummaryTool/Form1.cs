@@ -68,20 +68,20 @@ namespace ExcelSummaryTool
         /// <param name="sheet_index"></param>
         /// <param name="column_index"></param>
         /// <returns></returns>
-        private object[] GetSpecifyDataArray(object[,,] data_array,int sheet_index,int column_index)
+        private object[] GetSpecifyDataArray(object[,,] data_array, int sheet_index, int column_index)
         {
             int rowCount = data_array.GetLength(1);
             object[] specify_data = new object[rowCount];
-            for(int i = 0; i < rowCount; i++)
+            for (int i = 0; i < rowCount; i++)
             {
                 specify_data[i] = data_array[sheet_index, i, column_index];
             }
             return specify_data;
         }
-        private void Tab1_Result_Table(out object[,] Tab1_array,out List<SNRData> Signal_list)
+        private void Tab1_Result_Table(out object[,] Tab1_array, out List<SNRData> Signal_list)
         {
             #region 參數
-            int sheet_index = Convert.ToInt32(Tab1_Sheet_tb.Text)-1;
+            int sheet_index = Convert.ToInt32(Tab1_Sheet_tb.Text) - 1;
             int column_index = ExcelColumnToNumber(Tab1_Column_tb.Text);
             #endregion
             #region Get BeforeUnderfill 
@@ -89,9 +89,9 @@ namespace ExcelSummaryTool
             List<TempData> BFS_data = new List<TempData>();
             foreach (var file in SiganalBeforeUnderFill_FileList)
             {
-                DataDetail tmp = new DataDetail(); 
+                DataDetail tmp = new DataDetail();
                 object[] BUF_data_array;
-                BUF_data_array = GetSpecifyDataArray((object[,,])file.Data,sheet_index,column_index);
+                BUF_data_array = GetSpecifyDataArray((object[,,])file.Data, sheet_index, column_index);
                 tmp.Data = BUF_data_array;
                 tmp.SN = file.SN;
                 BUF_data_list.Add(tmp);
@@ -215,7 +215,7 @@ namespace ExcelSummaryTool
             #endregion
             Tab1_array = result_array;
         }
-        private void Tab2_Result_Table(out object[,] Tab2_array,out List<SNRData> Noise_list)
+        private void Tab2_Result_Table(out object[,] Tab2_array, out List<SNRData> Noise_list)
         {
             #region 參數
             int sheet_index = Convert.ToInt32(Tab2_Sheet_tb.Text) - 1;
@@ -290,14 +290,14 @@ namespace ExcelSummaryTool
             #region Prepare for SNR calculation
             Noise_list = new List<SNRData>();
             Noise_list = (from a in BFS_data
-                           join b in AFS_data on a.SN equals b.SN into gj
-                           from subB in gj.DefaultIfEmpty() // 沒對應就 subB 為 null
-                           select new SNRData
-                           {
-                               SN = a.SN,
-                               BeforeData = a.objects,
-                               AfterData = subB?.objects ?? Array.Empty<object>()  // 找不到就 null
-                           }).ToList();
+                          join b in AFS_data on a.SN equals b.SN into gj
+                          from subB in gj.DefaultIfEmpty() // 沒對應就 subB 為 null
+                          select new SNRData
+                          {
+                              SN = a.SN,
+                              BeforeData = a.objects,
+                              AfterData = subB?.objects ?? Array.Empty<object>()  // 找不到就 null
+                          }).ToList();
             #endregion
             #region Merge by SN
             // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
@@ -356,11 +356,156 @@ namespace ExcelSummaryTool
         }
         private void SNR_Table(out object[,] Tab_SNR_Array, List<SNRData> Signal_List, List<SNRData> Noise_List)
         {
+            #region Get SNR before&after list
+            List<object[]> signal_before_list = new List<object[]>();
+            List<object[]> signal_after_list = new List<object[]>();
+            List<object[]> noise_before_list = new List<object[]>();
+            List<object[]> noise_after_list = new List<object[]>();
+            Tab_SNR_Array = new object[Signal_List.Count, Noise_List.Count];
+            foreach (var signal_temp in Signal_List)
+            {
+                object[] signal_before = signal_temp.BeforeData;
+                object[] signal_after = signal_temp.AfterData;
+                signal_before_list.Add(signal_before);
+                signal_after_list.Add(signal_after);
+            }
+            foreach (var noise_temp in Noise_List)
+            {
+                object[] noise_before = noise_temp.BeforeData;
+                object[] noise_after = noise_temp.AfterData;
+                noise_before_list.Add(noise_before);
+                noise_after_list.Add(noise_after);
+            }
+            List<object[]> snr_before_list = CalcSNR(signal_before_list, noise_before_list);
+            List<object[]> snr_after_list = CalcSNR(signal_after_list, noise_after_list);
+            #endregion
+            #region calcu snr after&before diff
+            List<object[]> snr_diff_list = CalcDiffBySN(snr_before_list, snr_after_list);
+            #endregion
+            #region merge
+            int colCount = snr_before_list.Count + 2 + snr_after_list.Count + 2 + snr_diff_list.Count;
+            int rowCount = Math.Max(
+                snr_before_list.Count > 0 ? snr_before_list.Max(d => d.Length) : 0,
+                Math.Max(
+                    snr_after_list.Count > 0 ? snr_after_list.Max(d => d.Length) : 0,
+                    snr_diff_list.Count > 0 ? snr_diff_list.Max(d => d.Length) : 0
+                )
+            );
 
+            Tab_SNR_Array = new object[rowCount, colCount];
+
+            // === Step 3: 塞 Before (BUF區) ===
+            for (int c = 0; c < snr_before_list.Count; c++)
+            {
+                var data = snr_before_list[c];
+                for (int r = 0; r < data.Length; r++)
+                    Tab_SNR_Array[r, c] = data[r];
+            }
+
+            // === Step 4: 塞 After (AUF區) ===
+            int afterStart = snr_before_list.Count + 2;
+            for (int c = 0; c < snr_after_list.Count; c++)
+            {
+                var data = snr_after_list[c];
+                for (int r = 0; r < data.Length; r++)
+                    Tab_SNR_Array[r, afterStart + c] = data[r];
+            }
+
+            // === Step 5: 塞 Diff (Diff區) ===
+            int diffStart = snr_before_list.Count + 2 + snr_after_list.Count + 2;
+            for (int c = 0; c < snr_diff_list.Count; c++)
+            {
+                var data = snr_diff_list[c];
+                for (int r = 0; r < data.Length; r++)
+                {
+                    if (data[r] is string)
+                    {
+                        Tab_SNR_Array[r, diffStart + c] = data[r]; // 保留 SN
+                    }
+                    else
+                    {
+                        double val = Convert.ToDouble(data[r]);
+                        Tab_SNR_Array[r, diffStart + c] = (val == 0) ? null : (object)val;
+                    }
+                }
+            }
+            #endregion
+        }
+        private List<object[]> CalcSNR(List<object[]> signal_list, List<object[]> noise_list)
+        {
+            if (signal_list.Count != noise_list.Count)
+                throw new ArgumentException("Signal 與 Noise 筆數不一致");
+
+            List<object[]> snr_list = new List<object[]>();
+
+            for (int i = 0; i < signal_list.Count; i++)
+            {
+                object[] sig_temp = signal_list[i];
+                object[] noise_temp = noise_list[i];
+                if (sig_temp.Length == 0 || noise_temp.Length == 0) { continue; }
+                double noise = Convert.ToDouble(noise_temp[1]); // 固定取 index=1
+
+                object[] snr_row = new object[sig_temp.Length];
+
+                for (int j = 0; j < sig_temp.Length; j++)
+                {
+                    if (j == 0)
+                    {
+                        snr_row[j] = sig_temp[j]; // 第一欄保留原始識別值
+                    }
+                    else
+                    {
+                        double sig = Convert.ToDouble(sig_temp[j]);
+                        snr_row[j] = sig - noise;
+                    }
+                }
+
+                snr_list.Add(snr_row);
+            }
+
+            return snr_list;
+        }
+        public static List<object[]> CalcDiffBySN(List<object[]> beforeList, List<object[]> afterList)
+        {
+            List<object[]> diffList = new List<object[]>();
+
+            // 建立 After 的查表 (SN -> object[])
+            var afterDict = afterList
+                .Where(a => a.Length > 0 && a[0] != null)
+                .ToDictionary(a => a[0].ToString(), a => a);
+
+            foreach (var before in beforeList)
+            {
+                if (before.Length == 0 || before[0] == null)
+                    continue;
+
+                string sn = before[0].ToString();
+
+                // 找不到對應 SN 就跳過
+                if (!afterDict.TryGetValue(sn, out var after))
+                    continue;
+
+                // 比對長度，以最小長度為基準
+                int len = Math.Min(before.Length, after.Length);
+                object[] diff = new object[len];
+                diff[0] = sn; // 第一個是 SN，不計算差值
+
+                for (int i = 1; i < len; i++)
+                {
+                    double b = Convert.ToDouble(before[i]);
+                    double a = Convert.ToDouble(after[i]);
+                    diff[i] = b - a; // Before 減 After
+                }
+
+                diffList.Add(diff);
+            }
+
+            return diffList;
         }
         private bool CreateExcelTable(object[,] data1, object[,] data2, object[,] data3)
         {
-            try {
+            try
+            {
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
                     sfd.Filter = "Excel Files (*.xlsx)|*.xlsx";
@@ -377,16 +522,17 @@ namespace ExcelSummaryTool
 
                         var ws2 = package.Workbook.Worksheets.Add("Noise");
                         ws2.Cells[1, 1].LoadFromArrays(ToJaggedArray(data2));
-
+                        var ws3 = package.Workbook.Worksheets.Add("SNR");
+                        ws3.Cells[1, 1].LoadFromArrays(ToJaggedArray(data3));
                         package.SaveAs(new FileInfo(sfd.FileName));
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
-            
+
             return true;
         }
 
@@ -464,9 +610,10 @@ namespace ExcelSummaryTool
                 UIMessageBox.Show("tabpage2 參數未填寫");
                 return;
             }
-            Tab1_Result_Table(out object[,] tab1_array,out List<SNRData> Signal_Data_List);
+            Tab1_Result_Table(out object[,] tab1_array, out List<SNRData> Signal_Data_List);
             Tab2_Result_Table(out object[,] tab2_array, out List<SNRData> Noise_Data_List);
-            if(CreateExcelTable(tab1_array, tab2_array))
+            SNR_Table(out object[,] snr_array, Signal_Data_List, Noise_Data_List);
+            if (CreateExcelTable(tab1_array, tab2_array, snr_array))
             {
                 UIMessageBox.Show("資料輸出完成!!");
             }
@@ -491,7 +638,7 @@ namespace ExcelSummaryTool
                 sum *= 26;
                 sum += (column[i] - 'A' + 1);
             }
-            return sum-1;
+            return sum - 1;
         }
         #endregion
         #region 小工具
