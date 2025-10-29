@@ -208,7 +208,7 @@ namespace ExcelSummaryTool
                     else
                     {
                         double val = Convert.ToDouble(data[r]);
-                        result_array[r, diffStart + c] = (val == 0) ? null : (object)val;
+                        result_array[r, diffStart + c] = (object)val;
                     }
                 }
             }
@@ -346,7 +346,7 @@ namespace ExcelSummaryTool
                     else
                     {
                         double val = Convert.ToDouble(data[r]);
-                        result_array[r, diffStart + c] = (val == 0) ? null : (object)val;
+                        result_array[r, diffStart + c] = (object)val;
                     }
                 }
             }
@@ -451,7 +451,10 @@ namespace ExcelSummaryTool
                 {
                     if (j == 0)
                     {
-                        snr_row[j] = sig_temp[j]; // 第一欄保留原始識別值
+                        string name = sig_temp[j].ToString();
+                        string[] x = name.Split("_");
+                        x[1] = "SNR_" + x[1];
+                        snr_row[j] = x[1]; 
                     }
                     else
                     {
