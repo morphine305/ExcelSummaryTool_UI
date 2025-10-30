@@ -162,11 +162,8 @@ namespace ExcelSummaryTool
                            }).ToList();
             #endregion
             #region Merge by SN
-            // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
-            int colCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
-
-            // Y 軸 = 資料最大長度
-            int rowCount = Math.Max(
+            // X 軸 = 資料最大長度 (每列的欄數)
+            int colCount = Math.Max(
                 BUF_data_list.Count > 0 ? BUF_data_list.Max(d => d.Data.Length) : 0,
                 Math.Max(
                     AUF_data_list.Count > 0 ? AUF_data_list.Max(d => d.Data.Length) : 0,
@@ -174,42 +171,39 @@ namespace ExcelSummaryTool
                 )
             );
 
+            // Y 軸 = 各群組筆數 + 空白行
+            int rowCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
 
             object[,] result_array = new object[rowCount, colCount];
 
-            // 塞 BUF (第一段欄)
-            for (int c = 0; c < BUF_data_list.Count; c++)
+            // 塞 BUF (第一段列)
+            for (int r = 0; r < BUF_data_list.Count; r++)
             {
-                var data = BUF_data_list[c].Data;
-                for (int r = 0; r < data.Length; r++)
-                    result_array[r, c] = data[r];
+                var data = BUF_data_list[r].Data;
+                for (int c = 0; c < data.Length; c++)
+                    result_array[r, c] = data[c];
             }
 
-            // 塞 AUF (空 2 欄後)
+            // 塞 AUF (空 2 列後)
             int aufStart = BUF_data_list.Count + 2;
-            for (int c = 0; c < AUF_data_list.Count; c++)
+            for (int r = 0; r < AUF_data_list.Count; r++)
             {
-                var data = AUF_data_list[c].Data;
-                for (int r = 0; r < data.Length; r++)
-                    result_array[r, aufStart + c] = data[r];
+                var data = AUF_data_list[r].Data;
+                for (int c = 0; c < data.Length; c++)
+                    result_array[aufStart + r, c] = data[c];
             }
 
             // 塞 Diff (空 2 + BUF長 + 2 + AUF長)
             int diffStart = BUF_data_list.Count + 2 + AUF_data_list.Count + 2;
-            for (int c = 0; c < diffList.Count; c++)
+            for (int r = 0; r < diffList.Count; r++)
             {
-                var data = diffList[c].Data;
-                for (int r = 0; r < data.Length; r++)
+                var data = diffList[r].Data;
+                for (int c = 0; c < data.Length; c++)
                 {
-                    if (data[r] is string)
-                    {
-                        result_array[r, diffStart + c] = data[r]; // 保留原字串
-                    }
+                    if (data[c] is string)
+                        result_array[diffStart + r, c] = data[c];
                     else
-                    {
-                        double val = Convert.ToDouble(data[r]);
-                        result_array[r, diffStart + c] = (object)val;
-                    }
+                        result_array[diffStart + r, c] = Convert.ToDouble(data[c]);
                 }
             }
             #endregion
@@ -300,11 +294,8 @@ namespace ExcelSummaryTool
                           }).ToList();
             #endregion
             #region Merge by SN
-            // X 軸欄位 = BUF.Count + 2空欄 + AUF.Count + 2空欄 + Diff.Count
-            int colCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
-
-            // Y 軸 = 資料最大長度
-            int rowCount = Math.Max(
+            // X 軸欄位 = 資料最大長度
+            int colCount = Math.Max(
                 BUF_data_list.Count > 0 ? BUF_data_list.Max(d => d.Data.Length) : 0,
                 Math.Max(
                     AUF_data_list.Count > 0 ? AUF_data_list.Max(d => d.Data.Length) : 0,
@@ -312,44 +303,42 @@ namespace ExcelSummaryTool
                 )
             );
 
+            // Y 軸 = BUF + 2空列 + AUF + 2空列 + Diff
+            int rowCount = BUF_data_list.Count + 2 + AUF_data_list.Count + 2 + diffList.Count;
 
             object[,] result_array = new object[rowCount, colCount];
 
-            // 塞 BUF (第一段欄)
-            for (int c = 0; c < BUF_data_list.Count; c++)
+            // 塞 BUF (第一段列)
+            for (int r = 0; r < BUF_data_list.Count; r++)
             {
-                var data = BUF_data_list[c].Data;
-                for (int r = 0; r < data.Length; r++)
-                    result_array[r, c] = data[r];
+                var data = BUF_data_list[r].Data;
+                for (int c = 0; c < data.Length; c++)
+                    result_array[r, c] = data[c];
             }
 
-            // 塞 AUF (空 2 欄後)
+            // 塞 AUF (空 2 列後)
             int aufStart = BUF_data_list.Count + 2;
-            for (int c = 0; c < AUF_data_list.Count; c++)
+            for (int r = 0; r < AUF_data_list.Count; r++)
             {
-                var data = AUF_data_list[c].Data;
-                for (int r = 0; r < data.Length; r++)
-                    result_array[r, aufStart + c] = data[r];
+                var data = AUF_data_list[r].Data;
+                for (int c = 0; c < data.Length; c++)
+                    result_array[aufStart + r, c] = data[c];
             }
 
             // 塞 Diff (空 2 + BUF長 + 2 + AUF長)
             int diffStart = BUF_data_list.Count + 2 + AUF_data_list.Count + 2;
-            for (int c = 0; c < diffList.Count; c++)
+            for (int r = 0; r < diffList.Count; r++)
             {
-                var data = diffList[c].Data;
-                for (int r = 0; r < data.Length; r++)
+                var data = diffList[r].Data;
+                for (int c = 0; c < data.Length; c++)
                 {
-                    if (data[r] is string)
-                    {
-                        result_array[r, diffStart + c] = data[r]; // 保留原字串
-                    }
+                    if (data[c] is string)
+                        result_array[diffStart + r, c] = data[c];
                     else
-                    {
-                        double val = Convert.ToDouble(data[r]);
-                        result_array[r, diffStart + c] = (object)val;
-                    }
+                        result_array[diffStart + r, c] = Convert.ToDouble(data[c]);
                 }
             }
+
             #endregion
             Tab2_array = result_array;
 
@@ -383,8 +372,8 @@ namespace ExcelSummaryTool
             List<object[]> snr_diff_list = CalcDiffBySN(snr_before_list, snr_after_list);
             #endregion
             #region merge
-            int colCount = snr_before_list.Count + 2 + snr_after_list.Count + 2 + snr_diff_list.Count;
-            int rowCount = Math.Max(
+            // X 軸欄位 = 資料最大長度
+            int colCount = Math.Max(
                 snr_before_list.Count > 0 ? snr_before_list.Max(d => d.Length) : 0,
                 Math.Max(
                     snr_after_list.Count > 0 ? snr_after_list.Max(d => d.Length) : 0,
@@ -392,43 +381,45 @@ namespace ExcelSummaryTool
                 )
             );
 
+            // Y 軸 = before + 2空列 + after + 2空列 + diff
+            int rowCount = snr_before_list.Count + 2 + snr_after_list.Count + 2 + snr_diff_list.Count;
+
             Tab_SNR_Array = new object[rowCount, colCount];
 
             // === Step 3: 塞 Before (BUF區) ===
-            for (int c = 0; c < snr_before_list.Count; c++)
+            for (int r = 0; r < snr_before_list.Count; r++)
             {
-                var data = snr_before_list[c];
-                for (int r = 0; r < data.Length; r++)
-                    Tab_SNR_Array[r, c] = data[r];
+                var data = snr_before_list[r];
+                for (int c = 0; c < data.Length; c++)
+                    Tab_SNR_Array[r, c] = data[c];
             }
 
             // === Step 4: 塞 After (AUF區) ===
             int afterStart = snr_before_list.Count + 2;
-            for (int c = 0; c < snr_after_list.Count; c++)
+            for (int r = 0; r < snr_after_list.Count; r++)
             {
-                var data = snr_after_list[c];
-                for (int r = 0; r < data.Length; r++)
-                    Tab_SNR_Array[r, afterStart + c] = data[r];
+                var data = snr_after_list[r];
+                for (int c = 0; c < data.Length; c++)
+                    Tab_SNR_Array[afterStart + r, c] = data[c];
             }
 
             // === Step 5: 塞 Diff (Diff區) ===
             int diffStart = snr_before_list.Count + 2 + snr_after_list.Count + 2;
-            for (int c = 0; c < snr_diff_list.Count; c++)
+            for (int r = 0; r < snr_diff_list.Count; r++)
             {
-                var data = snr_diff_list[c];
-                for (int r = 0; r < data.Length; r++)
+                var data = snr_diff_list[r];
+                for (int c = 0; c < data.Length; c++)
                 {
-                    if (data[r] is string)
-                    {
-                        Tab_SNR_Array[r, diffStart + c] = data[r]; // 保留 SN
-                    }
+                    if (data[c] is string)
+                        Tab_SNR_Array[diffStart + r, c] = data[c];
                     else
                     {
-                        double val = Convert.ToDouble(data[r]);
-                        Tab_SNR_Array[r, diffStart + c] = (val == 0) ? null : (object)val;
+                        double val = Convert.ToDouble(data[c]);
+                        Tab_SNR_Array[diffStart + r, c] = (val == 0) ? null : (object)val;
                     }
                 }
             }
+
             #endregion
         }
         private List<object[]> CalcSNR(List<object[]> signal_list, List<object[]> noise_list)
