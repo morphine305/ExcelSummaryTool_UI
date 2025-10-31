@@ -21,6 +21,9 @@ namespace ExcelSummaryTool
         private List<FileDetail> NoiseAfterUnderFill_FileList = new List<FileDetail>();
         private List<FileDetail> SiganalBeforeUnderFill_FileList = new List<FileDetail>();
         private List<FileDetail> SiganalAfterUnderFill_FileList = new List<FileDetail>();
+        private List<FileDetail> RangeProBeforeUnderFill_FileList = new List<FileDetail>();
+        private List<FileDetail> RangeProAfterUnderFill_FileList = new List<FileDetail>();
+
         public Form1()
         {
             InitializeComponent();
@@ -62,6 +65,59 @@ namespace ExcelSummaryTool
             return excelData;
         }
         /// <summary>
+        /// 取得指定頁面,指定列,指定欄的資料陣列
+        /// </summary>
+        /// <param name="data_array"></param>
+        /// <param name="sheet_index"></param>
+        /// <param name="start_row_index"></param>
+        /// <param name="start_column_index"></param>
+        /// <param name="end_row_index"></param>
+        /// <param name="end_column_index"></param>
+        /// <returns></returns>
+        private object[,] GetSelectDataArray(object[,,] data_array, int sheet_index, int start_row_index,int start_column_index, int end_row_index, int end_column_index)
+        {
+            int rowcount = end_row_index - start_row_index +1;
+            int columncount = end_column_index - start_column_index +1;
+            object[,] select_data = new object[rowcount,columncount];
+            for (int r = 0; r < rowcount; r++)
+            {
+                for (int c = 0; c < columncount; c++)
+                {
+                    select_data[r, c] = data_array[sheet_index, start_row_index + r, start_column_index + c];
+                }
+            }
+            return select_data;
+        }
+        private object[] AvgNoise_Array(object[,] data_array)
+        {
+            int rows = data_array.GetLength(0);
+            int cols = data_array.GetLength(1);
+            object[] avg = new object[data_array.GetLength(1)];
+            for (int j = 0; j < cols; j++)
+            {
+                double total = 0;
+                for (int i = 0; i < rows; i++)
+                {
+                    if (data_array[i, j] != null)
+                        total += Convert.ToDouble(data_array[i, j]);
+                }
+                avg[j] = total / rows;
+            }
+            return avg;
+        }
+        private object AvgNoise(object[] data_array)
+        {
+            double total = 0;
+            for (int i = 0; i < data_array.Length; i++)
+            {
+                if(data_array[i] != null)
+                {
+                    total += Convert.ToDouble(data_array[i]);
+                }
+            }
+            return total / data_array.Length;
+        }
+        /// <summary>
         /// 取得指定頁面,指定欄位的資料陣列
         /// </summary>
         /// <param name="data_array"></param>
@@ -77,6 +133,150 @@ namespace ExcelSummaryTool
                 specify_data[i] = data_array[sheet_index, i, column_index];
             }
             return specify_data;
+        }
+        private void GetTableData(out List<Table> tabledata)
+        {
+            #region 參數
+            int sheet_index_signal = Convert.ToInt32(Tab1_Sheet_tb.Text) - 1;
+            int column_index_signal = ExcelColumnToNumber(Tab1_Column_tb.Text);
+            int sheet_index_noise = Convert.ToInt32(Tab2_Sheet_tb.Text) - 1;
+            int column_index_noise = ExcelColumnToNumber(Tab2_Column_tb.Text);
+            #endregion
+            tabledata = new List<Table>(); 
+            #region Get BeforeUnderfill 
+            List<DataDetail> BUF_Signal_list = new List<DataDetail>();
+            List<DataDetail> BUF_Noise_list = new List<DataDetail>();
+            foreach (var file in SiganalBeforeUnderFill_FileList)
+            {
+                DataDetail tmp = new DataDetail();
+                object[] BUF_data_array;
+                BUF_data_array = GetSpecifyDataArray((object[,,])file.Data, sheet_index_signal, column_index_signal);
+                tmp.Data = BUF_data_array;
+                tmp.SN = file.SN;
+                BUF_Signal_list.Add(tmp);
+            }
+            foreach (var file in NoiseBeforeUnderFill_FileList)
+            {
+                DataDetail tmp = new DataDetail();
+                object[] BUF_data_array;
+                BUF_data_array = GetSpecifyDataArray((object[,,])file.Data, sheet_index_noise, column_index_noise);
+                tmp.Data = BUF_data_array;
+                tmp.SN = file.SN;
+                BUF_Noise_list.Add(tmp);
+            }
+            #endregion
+            #region Get AfterUnderfill 
+            List<DataDetail> AUF_Signal_list = new List<DataDetail>();
+            List<DataDetail> AUF_Noise_list = new List<DataDetail>();
+            foreach (var file in SiganalAfterUnderFill_FileList)
+            {
+                DataDetail tmp = new DataDetail();
+                object[] AUF_data_array;
+                AUF_data_array = GetSpecifyDataArray((object[,,])file.Data, sheet_index_signal, column_index_signal);
+                tmp.Data = AUF_data_array;
+                tmp.SN = file.SN;
+                AUF_Signal_list.Add(tmp);
+            }
+            foreach (var file in NoiseAfterUnderFill_FileList)
+            {
+                DataDetail tmp = new DataDetail();
+                object[] AUF_data_array;
+                AUF_data_array = GetSpecifyDataArray((object[,,])file.Data, sheet_index_noise, column_index_noise);
+                tmp.Data = AUF_data_array;
+                tmp.SN = file.SN;
+                AUF_Noise_list.Add(tmp);
+            }
+            #endregion
+            int count = BUF_Signal_list.Count;
+            for(int i = 0; i < count; i++)
+            {
+                Table table = new Table();
+                table.Name = BUF_Signal_list[i].SN;
+                table.Signal_Before = BUF_Signal_list[i].Data;
+                var target = AUF_Signal_list.FirstOrDefault(x => x.SN == table.Name);
+                if(target != null)
+                {
+                    table.Signal_After = target.Data;
+                }
+                else
+                {
+                    table.Signal_After = null;
+                }
+                table.Noise_Before = BUF_Noise_list[i].Data;
+                target = AUF_Noise_list.FirstOrDefault(x => x.SN == table.Name);
+                if (target != null)
+                {
+                    table.Noise_After = target.Data;
+                }
+                else
+                {
+                    table.Noise_After = null;
+                }
+                tabledata.Add(table);
+            }
+        }
+        private void GetRangeTable()
+        {
+            #region 參數
+            int sheet_index = Convert.ToInt32(TB3_sheet_tb.Text);
+            int start_col_index = ExcelColumnToNumber(TB3_Start_Column_tb.Text);
+            int end_col_index = ExcelColumnToNumber(TB3_End_Column_tb.Text);
+            int start_row_index = Convert.ToInt32(TB3_Start_Row_tb.Text);
+            int end_row_index = Convert.ToInt32(TB3_End_Row_tb.Text);
+            #endregion
+            #region Get BeforeUnderfill 
+            List<DataDetail> BUF_Range_list = new List<DataDetail>();
+            List<DataDetail> AUF_Range_list = new List<DataDetail>();
+            foreach (var file in RangeProBeforeUnderFill_FileList)
+            {
+                DataDetail tmp = new DataDetail();
+                object[,] BUF_data_array;
+                BUF_data_array = GetSelectDataArray((object[,,])file.Data,sheet_index,start_row_index,start_col_index,end_row_index,end_col_index);
+                tmp.Data = AvgNoise_Array(BUF_data_array);
+                tmp.SN = file.SN;
+                BUF_Range_list.Add(tmp);
+            }
+            #endregion
+            #region Get AfterUnderfill 
+            foreach (var file in RangeProAfterUnderFill_FileList)
+            {
+                DataDetail tmp = new DataDetail();
+                object[,] AUF_data_array;
+                AUF_data_array = GetSelectDataArray((object[,,])file.Data, sheet_index, start_row_index, start_col_index, end_row_index, end_col_index);
+                tmp.Data = AvgNoise_Array(AUF_data_array);
+                tmp.SN = file.SN;
+                AUF_Range_list.Add(tmp);
+            }
+            #endregion
+        }
+        private List<Table> GetSNR(List<Table> table_list)
+        {
+            foreach(var table in table_list)
+            {
+                object[] snr_before = new object[table.Signal_Before.Length];
+                for(int i = 1; i < table.Signal_Before.Length; i++)
+                {
+                    double noise = Convert.ToDouble(table.Noise_Before[1]);
+                    snr_before[i] = Convert.ToDouble(table.Signal_Before[i]) - noise;
+                }
+                table.SNR_Before = snr_before;
+
+                if (table.Signal_After == null)
+                {
+                    table.SNR_After = null;
+                }
+                else
+                {
+                    object[] snr_after = new object[table.Signal_After.Length];
+                    for (int i = 1; i < table.Signal_After.Length; i++)
+                    {
+                        double noise = Convert.ToDouble(table.Noise_After[1]);
+                        snr_after[i] = Convert.ToDouble(table.Signal_After[i]) - noise;
+                    }
+                    table.SNR_After = snr_after;
+                }
+            }
+            return table_list;
         }
         private void Tab1_Result_Table(out object[,] Tab1_array, out List<SNRData> Signal_list)
         {
@@ -598,6 +798,12 @@ namespace ExcelSummaryTool
                     case "uiTextBox2":
                         SiganalAfterUnderFill_FileList = file_list;
                         break;
+                    case "uiTextBox5":
+                        RangeProBeforeUnderFill_FileList = file_list;
+                        break;
+                    case "uiTextBox6":
+                        RangeProAfterUnderFill_FileList = file_list;
+                        break;
                 }
             }
         }
@@ -613,17 +819,19 @@ namespace ExcelSummaryTool
                 UIMessageBox.Show("tabpage2 參數未填寫");
                 return;
             }
-            Tab1_Result_Table(out object[,] tab1_array, out List<SNRData> Signal_Data_List);
-            Tab2_Result_Table(out object[,] tab2_array, out List<SNRData> Noise_Data_List);
-            SNR_Table(out object[,] snr_array, Signal_Data_List, Noise_Data_List);
-            if (CreateExcelTable(tab1_array, tab2_array, snr_array))
-            {
-                UIMessageBox.Show("資料輸出完成!!");
-            }
-            else
-            {
-                UIMessageBox.Show("資料輸出失敗!!");
-            }
+            //Tab1_Result_Table(out object[,] tab1_array, out List<SNRData> Signal_Data_List);
+            //Tab2_Result_Table(out object[,] tab2_array, out List<SNRData> Noise_Data_List);
+            //SNR_Table(out object[,] snr_array, Signal_Data_List, Noise_Data_List);
+            //if (CreateExcelTable(tab1_array, tab2_array, snr_array))
+            //{
+            //    UIMessageBox.Show("資料輸出完成!!");
+            //}
+            //else
+            //{
+            //    UIMessageBox.Show("資料輸出失敗!!");
+            //}
+            GetTableData(out List<Table> table_list);
+            table_list = GetSNR(table_list);
         }
         #endregion
         #region Excel 小工具
@@ -651,10 +859,10 @@ namespace ExcelSummaryTool
 
             // 如果檔名有三段以上，用 '_' 分割
             var parts = name.Split('_');
-            if (parts.Length >= 3)
+            if (parts.Length >= 2)
             {
                 // SN + 測項 = 前兩段組合
-                return parts[0] + "_" + parts[1];
+                return parts[0];
             }
             else
             {

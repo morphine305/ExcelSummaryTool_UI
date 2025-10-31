@@ -18,6 +18,11 @@ namespace ExcelSummaryTool
         public string SN { get; set; }
         public object[] Data { get; set; }
     }
+    public class DataDetail_Range
+    {
+        public string SN { get; set; }
+        public object[,] Data { get; set; }
+    }
     public class SNRData
     {
         public string SN {  set; get; }
@@ -28,5 +33,24 @@ namespace ExcelSummaryTool
     {
         public string SN { set; get; }  
         public object[] objects { get; set; }
+    }
+    public class Table
+    {
+        public string Name { get; set; }
+        public object[] Signal_Before { set; get; }
+        public object[] Signal_After { set; get; }
+        public object[] Noise_Before { set; get; }
+        public object[] Noise_After { set; get; }
+        public object[] SNR_Before { set; get; }
+        public object[] SNR_After { set; get; }
+    }
+    public class Range_Table
+    {
+        public string Name { get; set; }
+        public object[] AvgNoise_Array_Before { set; get; }
+        public object[] AvgNoise_Array_After { set; get; }
+        public object AvgNoise_Before { set; get; }
+        public object AvgNoise_After { set; get; }
+
     }
 }
