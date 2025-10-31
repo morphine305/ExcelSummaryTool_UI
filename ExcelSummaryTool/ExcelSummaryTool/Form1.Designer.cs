@@ -259,6 +259,7 @@
             this.Tab1_Column_tb.ShowText = false;
             this.Tab1_Column_tb.Size = new System.Drawing.Size(75, 29);
             this.Tab1_Column_tb.TabIndex = 9;
+            this.Tab1_Column_tb.Text = "g";
             this.Tab1_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.Tab1_Column_tb.Watermark = "";
             // 
@@ -281,7 +282,9 @@
             // Tab1_Sheet_tb
             // 
             this.Tab1_Sheet_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.Tab1_Sheet_tb.DoubleValue = 1D;
             this.Tab1_Sheet_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.Tab1_Sheet_tb.IntValue = 1;
             this.Tab1_Sheet_tb.Location = new System.Drawing.Point(83, 6);
             this.Tab1_Sheet_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Tab1_Sheet_tb.MinimumSize = new System.Drawing.Size(1, 16);
@@ -290,6 +293,7 @@
             this.Tab1_Sheet_tb.ShowText = false;
             this.Tab1_Sheet_tb.Size = new System.Drawing.Size(75, 29);
             this.Tab1_Sheet_tb.TabIndex = 14;
+            this.Tab1_Sheet_tb.Text = "1";
             this.Tab1_Sheet_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.Tab1_Sheet_tb.Watermark = "";
             // 
@@ -367,7 +371,9 @@
             // Tab2_Sheet_tb
             // 
             this.Tab2_Sheet_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.Tab2_Sheet_tb.DoubleValue = 2D;
             this.Tab2_Sheet_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.Tab2_Sheet_tb.IntValue = 2;
             this.Tab2_Sheet_tb.Location = new System.Drawing.Point(85, 5);
             this.Tab2_Sheet_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Tab2_Sheet_tb.MinimumSize = new System.Drawing.Size(1, 16);
@@ -376,6 +382,7 @@
             this.Tab2_Sheet_tb.ShowText = false;
             this.Tab2_Sheet_tb.Size = new System.Drawing.Size(75, 29);
             this.Tab2_Sheet_tb.TabIndex = 25;
+            this.Tab2_Sheet_tb.Text = "2";
             this.Tab2_Sheet_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.Tab2_Sheet_tb.Watermark = "";
             // 
@@ -422,6 +429,7 @@
             this.Tab2_Column_tb.ShowText = false;
             this.Tab2_Column_tb.Size = new System.Drawing.Size(75, 29);
             this.Tab2_Column_tb.TabIndex = 21;
+            this.Tab2_Column_tb.Text = "a";
             this.Tab2_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.Tab2_Column_tb.Watermark = "";
             // 
@@ -557,7 +565,9 @@
             // TB3_sheet_tb
             // 
             this.TB3_sheet_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TB3_sheet_tb.DoubleValue = 3D;
             this.TB3_sheet_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.TB3_sheet_tb.IntValue = 3;
             this.TB3_sheet_tb.Location = new System.Drawing.Point(118, 5);
             this.TB3_sheet_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TB3_sheet_tb.MinimumSize = new System.Drawing.Size(1, 16);
@@ -566,6 +576,7 @@
             this.TB3_sheet_tb.ShowText = false;
             this.TB3_sheet_tb.Size = new System.Drawing.Size(75, 29);
             this.TB3_sheet_tb.TabIndex = 31;
+            this.TB3_sheet_tb.Text = "3";
             this.TB3_sheet_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.TB3_sheet_tb.Watermark = "";
             // 
@@ -611,13 +622,16 @@
             this.TB3_Start_Column_tb.ShowText = false;
             this.TB3_Start_Column_tb.Size = new System.Drawing.Size(75, 29);
             this.TB3_Start_Column_tb.TabIndex = 28;
+            this.TB3_Start_Column_tb.Text = "p";
             this.TB3_Start_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.TB3_Start_Column_tb.Watermark = "";
             // 
             // TB3_Start_Row_tb
             // 
             this.TB3_Start_Row_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TB3_Start_Row_tb.DoubleValue = 2D;
             this.TB3_Start_Row_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.TB3_Start_Row_tb.IntValue = 2;
             this.TB3_Start_Row_tb.Location = new System.Drawing.Point(118, 81);
             this.TB3_Start_Row_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TB3_Start_Row_tb.MinimumSize = new System.Drawing.Size(1, 16);
@@ -626,6 +640,7 @@
             this.TB3_Start_Row_tb.ShowText = false;
             this.TB3_Start_Row_tb.Size = new System.Drawing.Size(75, 29);
             this.TB3_Start_Row_tb.TabIndex = 29;
+            this.TB3_Start_Row_tb.Text = "2";
             this.TB3_Start_Row_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.TB3_Start_Row_tb.Watermark = "";
             // 
@@ -661,13 +676,16 @@
             this.TB3_End_Column_tb.ShowText = false;
             this.TB3_End_Column_tb.Size = new System.Drawing.Size(75, 29);
             this.TB3_End_Column_tb.TabIndex = 30;
+            this.TB3_End_Column_tb.Text = "jk";
             this.TB3_End_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.TB3_End_Column_tb.Watermark = "";
             // 
             // TB3_End_Row_tb
             // 
             this.TB3_End_Row_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TB3_End_Row_tb.DoubleValue = 11D;
             this.TB3_End_Row_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.TB3_End_Row_tb.IntValue = 11;
             this.TB3_End_Row_tb.Location = new System.Drawing.Point(322, 81);
             this.TB3_End_Row_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TB3_End_Row_tb.MinimumSize = new System.Drawing.Size(1, 16);
@@ -676,6 +694,7 @@
             this.TB3_End_Row_tb.ShowText = false;
             this.TB3_End_Row_tb.Size = new System.Drawing.Size(75, 29);
             this.TB3_End_Row_tb.TabIndex = 31;
+            this.TB3_End_Row_tb.Text = "11";
             this.TB3_End_Row_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.TB3_End_Row_tb.Watermark = "";
             // 
