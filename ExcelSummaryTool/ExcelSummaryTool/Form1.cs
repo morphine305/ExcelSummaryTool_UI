@@ -267,13 +267,13 @@ namespace ExcelSummaryTool
                     range_table.AvgNoise_Array_After = new object[0];
                 }
                 range_table.AvgNoise_Before = AvgNoise(range_table.AvgNoise_Array_Before);
-                if (range_table.AvgNoise_Array_After != null)
+                if (range_table.AvgNoise_Array_After.Length > 0)
                 {
                     range_table.AvgNoise_After = AvgNoise(range_table.AvgNoise_Array_After);
                 }
                 else
                 {
-                    range_table.AvgNoise_After = new object[0];
+                    range_table.AvgNoise_After = null;
                 }
                 range_Table_list.Add(range_table);
             }
@@ -347,7 +347,7 @@ namespace ExcelSummaryTool
         }
         private object[,] MergeDataToExcel_sheet1(List<Table> table_list, List<Range_Table> rangeTable_list, object[] topic)
         {
-           
+
             var joinedList = table_list.Join(
                              rangeTable_list,
                              t => t.Name,             // Table 的 key
@@ -385,20 +385,20 @@ namespace ExcelSummaryTool
                 excel_table[i + 1, colIndex] = joinedList[i].Name;
                 colIndex++;
                 excel_table[i + 1, colIndex] = joinedList[i].Noise_Before[1];
-                colIndex ++;
-                excel_table[i + 1, colIndex] = joinedList[i].Noise_After.Length != 0? joinedList[i].Noise_After[1]:null;
+                colIndex++;
+                excel_table[i + 1, colIndex] = joinedList[i].Noise_After.Length != 0 ? joinedList[i].Noise_After[1] : null;
                 colIndex++;
                 excel_table[i + 1, colIndex] = joinedList[i].AvgNoise_Before;
                 colIndex++;
-                excel_table[i + 1, colIndex] = joinedList[i].AvgNoise_After != null ? joinedList[i].AvgNoise_After:null;
+                excel_table[i + 1, colIndex] = joinedList[i].AvgNoise_After != null ? joinedList[i].AvgNoise_After : null;
                 colIndex++;
-                for(int len = 1; len < joinedList[i].Signal_Before.Length; len++)
+                for (int len = 1; len < joinedList[i].Signal_Before.Length; len++)
                 {
                     object target = joinedList[i].Signal_Before[len];
                     excel_table[i + 1, colIndex] = target;
                     colIndex++;
                 }
-                if(joinedList[i].Signal_After.Length > 0)
+                if (joinedList[i].Signal_After.Length > 0)
                 {
                     for (int len = 1; len < joinedList[i].Signal_After.Length; len++)
                     {
@@ -413,7 +413,7 @@ namespace ExcelSummaryTool
                 {
                     colIndex += 121;
                 }
-                for(int len = 0; len < joinedList[i].AvgNoise_Array_Before.Length; len++)
+                for (int len = 0; len < joinedList[i].AvgNoise_Array_Before.Length; len++)
                 {
                     object target = joinedList[i].AvgNoise_Array_Before[len];
                     excel_table[i + 1, colIndex] = target;
@@ -434,7 +434,7 @@ namespace ExcelSummaryTool
                 {
                     colIndex += 256;
                 }
-                for(int len = 1; len < joinedList[i].SNR_Before.Length; len++)
+                for (int len = 1; len < joinedList[i].SNR_Before.Length; len++)
                 {
                     object target = joinedList[i].SNR_Before[len];
                     excel_table[i + 1, colIndex] = target;
@@ -455,7 +455,7 @@ namespace ExcelSummaryTool
                 {
                     colIndex += 121;
                 }
-                for(int len = 1; len < joinedList[i].SNR_Range_Before.Length; len++)
+                for (int len = 1; len < joinedList[i].SNR_Range_Before.Length; len++)
                 {
                     object target = joinedList[i].SNR_Range_Before[len];
                     excel_table[i + 1, colIndex] = target;
@@ -463,7 +463,7 @@ namespace ExcelSummaryTool
                 }
                 if (joinedList[i].SNR_Range_After.Length > 0)
                 {
-                    for(int len = 1; len < joinedList[i].SNR_Range_After.Length; len++)
+                    for (int len = 1; len < joinedList[i].SNR_Range_After.Length; len++)
                     {
                         object target = joinedList[i].SNR_Range_After[len];
                         if (target == null)
@@ -479,29 +479,153 @@ namespace ExcelSummaryTool
             }
             return excel_table;
         }
-        private List<Range_Table> GetSNR_Range(List<Table> table_list,List<Range_Table> rangeTable_list)
+        private object[,] MergeDataToExcel_sheet2(List<Table> table_list, List<Range_Table> rangeTable_list, object[] topic)
+        {
+
+            var joinedList = table_list.Join(
+                             rangeTable_list,
+                             t => t.Name,             // Table 的 key
+                             r => r.Name,             // Range_Table 的 key
+                             (t, r) => new
+                             {
+                                 t.Name,
+                                 t.Signal_Before,
+                                 t.Signal_After,
+                                 t.Signal_Diff,
+                                 t.Noise_Before,
+                                 t.Noise_After,
+                                 t.Noise_Diff,
+                                 t.SNR_Before,
+                                 t.SNR_After,
+                                 t.SNR_Diff,
+                                 r.AvgNoise_Array_Before,
+                                 r.AvgNoise_Array_After,
+                                 r.AvgNoise_Array_Diff,
+                                 r.AvgNoise_Before,
+                                 r.AvgNoise_After,
+                                 r.AvgNoise_Diff,
+                                 r.SNR_Range_Before,
+                                 r.SNR_Range_After,
+                                 r.SNR_Range_Diff
+                             }).ToList();
+            object[,] excel_table = new object[joinedList.Count + 1, topic.Length];
+            for (int j = 0; j < topic.Length; j++)
+            {
+                excel_table[0, j] = topic[j];
+            }
+            for (int i = 0; i < joinedList.Count; i++)
+            {
+                int colIndex = 0;
+                excel_table[i + 1, colIndex] = joinedList[i].Name;
+                colIndex++;
+                excel_table[i + 1, colIndex] = joinedList[i].Noise_Before[1];
+                colIndex++;
+                excel_table[i + 1, colIndex] = joinedList[i].Noise_After.Length != 0 ? joinedList[i].Noise_After[1] : null;
+                colIndex++;
+                excel_table[i + 1, colIndex] = joinedList[i].AvgNoise_Before;
+                colIndex++;
+                excel_table[i + 1, colIndex] = joinedList[i].AvgNoise_After != null ? joinedList[i].AvgNoise_After : null;
+                colIndex++;
+                excel_table[i + 1, colIndex] = joinedList[i].Noise_Diff.Length > 0 ? joinedList[i].Noise_Diff[1] : null;
+                colIndex++;
+                excel_table[i + 1, colIndex] = joinedList[i].AvgNoise_Diff;
+                colIndex++;
+
+                if (joinedList[i].Signal_Diff.Length > 0)
+                {
+                    for (int len = 1; len < joinedList[i].Signal_Diff.Length; len++)
+                    {
+                        object target = joinedList[i].Signal_Diff[len];
+                        if (target == null)
+                            continue;
+                        excel_table[i + 1, colIndex] = target;
+                        colIndex++;
+                    }
+                }
+                else
+                {
+                    colIndex += 121;
+                }
+
+
+                if (joinedList[i].AvgNoise_Array_Diff.Length > 0)
+                {
+                    for (int len = 0; len < joinedList[i].AvgNoise_Array_Diff.Length; len++)
+                    {
+                        object target = joinedList[i].AvgNoise_Array_Diff[len];
+                        if (target == null)
+                            continue;
+                        excel_table[i + 1, colIndex] = target;
+                        colIndex++;
+                    }
+                }
+                else
+                {
+                    colIndex += 256;
+                }
+
+                if (joinedList[i].SNR_Diff.Length > 0)
+                {
+                    for (int len = 1; len < joinedList[i].SNR_Diff.Length; len++)
+                    {
+                        object target = joinedList[i].SNR_Diff[len];
+                        if (target == null)
+                            continue;
+                        excel_table[i + 1, colIndex] = target;
+                        colIndex++;
+                    }
+                }
+                else
+                {
+                    colIndex += 121;
+                }
+
+
+                if (joinedList[i].SNR_Range_Diff.Length > 0)
+                {
+                    for (int len = 1; len < joinedList[i].SNR_Range_Diff.Length; len++)
+                    {
+                        object target = joinedList[i].SNR_Range_Diff[len];
+                        if (target == null)
+                            continue;
+                        excel_table[i + 1, colIndex] = target;
+                        colIndex++;
+                    }
+                }
+                else
+                {
+                    colIndex += 121;
+                }
+            }
+            return excel_table;
+        }
+        private List<Range_Table> GetSNR_Range(List<Table> table_list, List<Range_Table> rangeTable_list)
         {
             var tableDict = table_list.ToDictionary(t => t.Name);
             int count = rangeTable_list.Count;
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 if (tableDict.TryGetValue(rangeTable_list[i].Name, out var table))
                 {
                     object[] snr_before = new object[table.Signal_Before.Length];
-                    for(int j = 1; j < table.Signal_Before.Length; j++)
+                    for (int j = 1; j < table.Signal_Before.Length; j++)
                     {
                         snr_before[j] = Convert.ToDouble(table.Signal_Before[j]) - Convert.ToDouble(rangeTable_list[i].AvgNoise_Before);
                     }
                     rangeTable_list[i].SNR_Range_Before = snr_before;
                     object[] snr_after = new object[table.Signal_After.Length];
-                    if(table.Signal_After.Length != 0)
+                    if (table.Signal_After.Length != 0)
                     {
                         for (int a = 1; a < table.Signal_After.Length; a++)
                         {
+                            if (table.Signal_After[a] == null)
+                            {
+                                continue;
+                            }
                             snr_after[a] = Convert.ToDouble(table.Signal_After[a]) - Convert.ToDouble(rangeTable_list[i].AvgNoise_After);
                         }
                         object[] snr_diff = new object[snr_before.Length];
-                        for(int k = 1; k < snr_before.Length; k++)
+                        for (int k = 1; k < snr_before.Length; k++)
                         {
                             snr_diff[k] = Convert.ToDouble(snr_before[k]) - Convert.ToDouble(snr_after[k]);
                         }
@@ -513,7 +637,7 @@ namespace ExcelSummaryTool
                         rangeTable_list[i].SNR_Range_After = snr_after;
                         rangeTable_list[i].SNR_Range_Diff = new object[0];
                     }
-                    
+
                 }
                 else
                 {
@@ -546,6 +670,10 @@ namespace ExcelSummaryTool
                     for (int i = 1; i < table.Signal_After.Length; i++)
                     {
                         double noise = Convert.ToDouble(table.Noise_After[1]);
+                        if (table.Signal_After[i] == null)
+                        {
+                            continue;
+                        }
                         snr_after[i] = Convert.ToDouble(table.Signal_After[i]) - noise;
                     }
                     table.SNR_After = snr_after;
@@ -555,7 +683,7 @@ namespace ExcelSummaryTool
         }
         private object[] CalcSameDiff_Array(object[] before, object[] after)
         {
-            if (before == null || after == null)
+            if (before.Length == 0 || after.Length == 0)
                 return new object[0];
             int len = before.Length;
             object[] diff = new object[len];
@@ -584,6 +712,11 @@ namespace ExcelSummaryTool
             foreach (var table in rangeTable_list)
             {
                 table.AvgNoise_Array_Diff = CalcSameDiff_Array(table.AvgNoise_Array_Before, table.AvgNoise_Array_After);
+                if (table.AvgNoise_After == null)
+                {
+                    table.AvgNoise_Diff = null;
+                    continue;
+                }
                 table.AvgNoise_Diff = Convert.ToDouble(table.AvgNoise_Before) - Convert.ToDouble(table.AvgNoise_After);
             }
             return rangeTable_list;
@@ -1015,7 +1148,7 @@ namespace ExcelSummaryTool
 
             return diffList;
         }
-        private bool CreateExcelTable(object[,] data1/*, object[,] data2, object[,] data3*/)
+        private bool CreateExcelTable(object[,] data1, object[,] data2/*, object[,] data3*/)
         {
             try
             {
@@ -1030,11 +1163,11 @@ namespace ExcelSummaryTool
 
                     using (var package = new ExcelPackage())
                     {
-                        var ws1 = package.Workbook.Worksheets.Add("Signal");
+                        var ws1 = package.Workbook.Worksheets.Add("underfill前後數值");
                         ws1.Cells[1, 1].LoadFromArrays(ToJaggedArray(data1));
 
-                        //var ws2 = package.Workbook.Worksheets.Add("Noise");
-                        //ws2.Cells[1, 1].LoadFromArrays(ToJaggedArray(data2));
+                        var ws2 = package.Workbook.Worksheets.Add("underfill前後差異質");
+                        ws2.Cells[1, 1].LoadFromArrays(ToJaggedArray(data2));
                         //var ws3 = package.Workbook.Worksheets.Add("SNR");
                         //ws3.Cells[1, 1].LoadFromArrays(ToJaggedArray(data3));
                         package.SaveAs(new FileInfo(sfd.FileName));
@@ -1151,7 +1284,8 @@ namespace ExcelSummaryTool
             object[] topic_1 = ExcelTopic_sheet1();
             object[] topic_2 = ExcelTopic_sheet2();
             object[,] tab1_array = MergeDataToExcel_sheet1(table_list, rangeTable_list, topic_1);
-            if (CreateExcelTable(tab1_array))
+            object[,] tab2_array = MergeDataToExcel_sheet2(table_list, rangeTable_list, topic_2);
+            if (CreateExcelTable(tab1_array, tab2_array))
             {
                 UIMessageBox.Show("資料輸出完成!!");
             }
