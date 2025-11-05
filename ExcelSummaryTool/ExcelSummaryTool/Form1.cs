@@ -107,17 +107,22 @@ namespace ExcelSummaryTool
             }
             return avg;
         }
-        private object AvgNoise(object[] data_array)
+        private object AvgNoise(object[] data_array, int start_col_index, int end_col_index)
         {
             double total = 0;
-            for (int i = 0; i < data_array.Length; i++)
+            int len = end_col_index - start_col_index + 1;
+            for (int i = start_col_index; i < end_col_index + 1; i++)
             {
                 if (data_array[i] != null)
                 {
                     total += Convert.ToDouble(data_array[i]);
                 }
             }
-            return total / data_array.Length;
+            if (len == 0)
+            {
+                return 0;
+            }
+            return total / len;
         }
         /// <summary>
         /// 取得指定頁面,指定欄位的資料陣列
@@ -225,6 +230,8 @@ namespace ExcelSummaryTool
             int end_col_index = ExcelColumnToNumber(TB3_End_Column_tb.Text);
             int start_row_index = Convert.ToInt32(TB3_Start_Row_tb.Text) - 1;
             int end_row_index = Convert.ToInt32(TB3_End_Row_tb.Text) - 1;
+            int avg_start_col_index = ExcelColumnToNumber(TB3_Avg_Start_Column_tb.Text);
+            int avg_end_col_index = ExcelColumnToNumber(TB3_Avg_End_Column_tb.Text);
             #endregion
             #region Get BeforeUnderfill 
             List<DataDetail> BUF_Range_list = new List<DataDetail>();
@@ -266,10 +273,10 @@ namespace ExcelSummaryTool
                 {
                     range_table.AvgNoise_Array_After = new object[0];
                 }
-                range_table.AvgNoise_Before = AvgNoise(range_table.AvgNoise_Array_Before);
+                range_table.AvgNoise_Before = AvgNoise(range_table.AvgNoise_Array_Before, avg_start_col_index, avg_end_col_index);
                 if (range_table.AvgNoise_Array_After.Length > 0)
                 {
-                    range_table.AvgNoise_After = AvgNoise(range_table.AvgNoise_Array_After);
+                    range_table.AvgNoise_After = AvgNoise(range_table.AvgNoise_Array_After, avg_start_col_index, avg_end_col_index);
                 }
                 else
                 {
@@ -685,7 +692,7 @@ namespace ExcelSummaryTool
         {
             if (before.Length == 0 || after.Length == 0)
                 return new object[0];
-            int len = before.Length;
+            int len = Math.Min(before.Length, after.Length);
             object[] diff = new object[len];
             for (int i = 0; i < len; i++)
             {
@@ -1254,12 +1261,17 @@ namespace ExcelSummaryTool
         {
             if (string.IsNullOrEmpty(Tab1_Sheet_tb.Text) || string.IsNullOrEmpty(Tab1_Column_tb.Text))
             {
-                UIMessageBox.Show("tabpage1 參數未填寫");
+                UIMessageBox.Show("Signal 參數未填寫");
                 return;
             }
             if (string.IsNullOrEmpty(Tab2_Sheet_tb.Text) || string.IsNullOrEmpty(Tab2_Column_tb.Text))
             {
-                UIMessageBox.Show("tabpage2 參數未填寫");
+                UIMessageBox.Show("Noise 參數未填寫");
+                return;
+            }
+            if (string.IsNullOrEmpty(TB3_sheet_tb.Text) || string.IsNullOrEmpty(TB3_Start_Column_tb.Text) || string.IsNullOrEmpty(TB3_Start_Row_tb.Text) || string.IsNullOrEmpty(TB3_End_Column_tb.Text) || string.IsNullOrEmpty(TB3_End_Row_tb.Text))
+            {
+                UIMessageBox.Show("RangeProfile 參數未填寫");
                 return;
             }
 #if false
@@ -1275,6 +1287,7 @@ namespace ExcelSummaryTool
             //    UIMessageBox.Show("資料輸出失敗!!");
             //}
 #endif
+
             GetTableData(out List<Table> table_list);
             table_list = GetSNR(table_list);
             table_list = GetDiff(table_list);

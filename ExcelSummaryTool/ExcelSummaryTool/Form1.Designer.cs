@@ -37,6 +37,10 @@
             this.uiTextBox3 = new Sunny.UI.UITextBox();
             this.uiTextBox4 = new Sunny.UI.UITextBox();
             this.uiTableLayoutPanel1 = new Sunny.UI.UITableLayoutPanel();
+            this.uiTextBox6 = new Sunny.UI.UITextBox();
+            this.uiTextBox5 = new Sunny.UI.UITextBox();
+            this.uiLabel11 = new Sunny.UI.UILabel();
+            this.uiLabel12 = new Sunny.UI.UILabel();
             this.uiLabel5 = new Sunny.UI.UILabel();
             this.uiLabel6 = new Sunny.UI.UILabel();
             this.Tab1_Column_tb = new Sunny.UI.UITextBox();
@@ -53,30 +57,30 @@
             this.uiLabel9 = new Sunny.UI.UILabel();
             this.Tab2_Column_tb = new Sunny.UI.UITextBox();
             this.Tab2_Row_tb = new Sunny.UI.UITextBox();
-            this.uiTableLayoutPanel2 = new Sunny.UI.UITableLayoutPanel();
-            this.uiTableLayoutPanel3 = new Sunny.UI.UITableLayoutPanel();
-            this.uiLabel11 = new Sunny.UI.UILabel();
-            this.uiLabel12 = new Sunny.UI.UILabel();
-            this.uiTextBox5 = new Sunny.UI.UITextBox();
-            this.uiTextBox6 = new Sunny.UI.UITextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.TB3_End_Column_tb = new Sunny.UI.UITextBox();
+            this.TB3_End_Row_tb = new Sunny.UI.UITextBox();
+            this.uiLabel17 = new Sunny.UI.UILabel();
+            this.uiLabel16 = new Sunny.UI.UILabel();
             this.TB3_sheet_tb = new Sunny.UI.UITextBox();
             this.uiLabel13 = new Sunny.UI.UILabel();
             this.uiLabel14 = new Sunny.UI.UILabel();
             this.uiLabel15 = new Sunny.UI.UILabel();
             this.TB3_Start_Column_tb = new Sunny.UI.UITextBox();
             this.TB3_Start_Row_tb = new Sunny.UI.UITextBox();
-            this.uiLabel16 = new Sunny.UI.UILabel();
-            this.uiLabel17 = new Sunny.UI.UILabel();
-            this.TB3_End_Column_tb = new Sunny.UI.UITextBox();
-            this.TB3_End_Row_tb = new Sunny.UI.UITextBox();
+            this.uiTableLayoutPanel2 = new Sunny.UI.UITableLayoutPanel();
+            this.uiTableLayoutPanel3 = new Sunny.UI.UITableLayoutPanel();
+            this.TB3_Avg_End_Column_tb = new Sunny.UI.UITextBox();
+            this.uiLabel18 = new Sunny.UI.UILabel();
+            this.uiLabel19 = new Sunny.UI.UILabel();
+            this.TB3_Avg_Start_Column_tb = new Sunny.UI.UITextBox();
             this.uiTableLayoutPanel1.SuspendLayout();
             this.uiTabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.uiTableLayoutPanel2.SuspendLayout();
             this.uiTableLayoutPanel3.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // uiLabel1
@@ -226,6 +230,64 @@
             this.uiTableLayoutPanel1.TabIndex = 6;
             this.uiTableLayoutPanel1.TagString = null;
             // 
+            // uiTextBox6
+            // 
+            this.uiTextBox6.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.uiTextBox6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiTextBox6.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.uiTextBox6.Location = new System.Drawing.Point(95, 210);
+            this.uiTextBox6.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.uiTextBox6.MinimumSize = new System.Drawing.Size(1, 16);
+            this.uiTextBox6.Name = "uiTextBox6";
+            this.uiTextBox6.Padding = new System.Windows.Forms.Padding(5);
+            this.uiTextBox6.ShowText = false;
+            this.uiTextBox6.Size = new System.Drawing.Size(401, 33);
+            this.uiTextBox6.TabIndex = 9;
+            this.uiTextBox6.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            this.uiTextBox6.Watermark = "";
+            this.uiTextBox6.Click += new System.EventHandler(this.SelectFolder_Click);
+            // 
+            // uiTextBox5
+            // 
+            this.uiTextBox5.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.uiTextBox5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiTextBox5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.uiTextBox5.Location = new System.Drawing.Point(95, 169);
+            this.uiTextBox5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.uiTextBox5.MinimumSize = new System.Drawing.Size(1, 16);
+            this.uiTextBox5.Name = "uiTextBox5";
+            this.uiTextBox5.Padding = new System.Windows.Forms.Padding(5);
+            this.uiTextBox5.ShowText = false;
+            this.uiTextBox5.Size = new System.Drawing.Size(401, 31);
+            this.uiTextBox5.TabIndex = 8;
+            this.uiTextBox5.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            this.uiTextBox5.Watermark = "";
+            this.uiTextBox5.Click += new System.EventHandler(this.SelectFolder_Click);
+            // 
+            // uiLabel11
+            // 
+            this.uiLabel11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiLabel11.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.uiLabel11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.uiLabel11.Location = new System.Drawing.Point(3, 164);
+            this.uiLabel11.Name = "uiLabel11";
+            this.uiLabel11.Size = new System.Drawing.Size(85, 41);
+            this.uiLabel11.TabIndex = 6;
+            this.uiLabel11.Text = "RangeProfile_before";
+            this.uiLabel11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // uiLabel12
+            // 
+            this.uiLabel12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiLabel12.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.uiLabel12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.uiLabel12.Location = new System.Drawing.Point(3, 205);
+            this.uiLabel12.Name = "uiLabel12";
+            this.uiLabel12.Size = new System.Drawing.Size(85, 43);
+            this.uiLabel12.TabIndex = 7;
+            this.uiLabel12.Text = "RangeProfile_after";
+            this.uiLabel12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // uiLabel5
             // 
             this.uiLabel5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -259,7 +321,6 @@
             this.Tab1_Column_tb.ShowText = false;
             this.Tab1_Column_tb.Size = new System.Drawing.Size(75, 29);
             this.Tab1_Column_tb.TabIndex = 9;
-            this.Tab1_Column_tb.Text = "g";
             this.Tab1_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.Tab1_Column_tb.Watermark = "";
             // 
@@ -282,9 +343,7 @@
             // Tab1_Sheet_tb
             // 
             this.Tab1_Sheet_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.Tab1_Sheet_tb.DoubleValue = 1D;
             this.Tab1_Sheet_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.Tab1_Sheet_tb.IntValue = 1;
             this.Tab1_Sheet_tb.Location = new System.Drawing.Point(83, 6);
             this.Tab1_Sheet_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Tab1_Sheet_tb.MinimumSize = new System.Drawing.Size(1, 16);
@@ -293,7 +352,6 @@
             this.Tab1_Sheet_tb.ShowText = false;
             this.Tab1_Sheet_tb.Size = new System.Drawing.Size(75, 29);
             this.Tab1_Sheet_tb.TabIndex = 14;
-            this.Tab1_Sheet_tb.Text = "1";
             this.Tab1_Sheet_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.Tab1_Sheet_tb.Watermark = "";
             // 
@@ -363,7 +421,7 @@
             this.tabPage2.Controls.Add(this.Tab2_Row_tb);
             this.tabPage2.Location = new System.Drawing.Point(0, 40);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(453, 180);
+            this.tabPage2.Size = new System.Drawing.Size(200, 60);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Noise";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -371,9 +429,7 @@
             // Tab2_Sheet_tb
             // 
             this.Tab2_Sheet_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.Tab2_Sheet_tb.DoubleValue = 2D;
             this.Tab2_Sheet_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.Tab2_Sheet_tb.IntValue = 2;
             this.Tab2_Sheet_tb.Location = new System.Drawing.Point(85, 5);
             this.Tab2_Sheet_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Tab2_Sheet_tb.MinimumSize = new System.Drawing.Size(1, 16);
@@ -382,7 +438,6 @@
             this.Tab2_Sheet_tb.ShowText = false;
             this.Tab2_Sheet_tb.Size = new System.Drawing.Size(75, 29);
             this.Tab2_Sheet_tb.TabIndex = 25;
-            this.Tab2_Sheet_tb.Text = "2";
             this.Tab2_Sheet_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.Tab2_Sheet_tb.Watermark = "";
             // 
@@ -429,7 +484,6 @@
             this.Tab2_Column_tb.ShowText = false;
             this.Tab2_Column_tb.Size = new System.Drawing.Size(75, 29);
             this.Tab2_Column_tb.TabIndex = 21;
-            this.Tab2_Column_tb.Text = "a";
             this.Tab2_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.Tab2_Column_tb.Watermark = "";
             // 
@@ -449,102 +503,12 @@
             this.Tab2_Row_tb.Visible = false;
             this.Tab2_Row_tb.Watermark = "";
             // 
-            // uiTableLayoutPanel2
-            // 
-            this.uiTableLayoutPanel2.ColumnCount = 2;
-            this.uiTableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.9661F));
-            this.uiTableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.0339F));
-            this.uiTableLayoutPanel2.Controls.Add(this.uiTabControl1, 0, 1);
-            this.uiTableLayoutPanel2.Controls.Add(this.uiTableLayoutPanel1, 0, 0);
-            this.uiTableLayoutPanel2.Controls.Add(this.uiTableLayoutPanel3, 1, 0);
-            this.uiTableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uiTableLayoutPanel2.Location = new System.Drawing.Point(0, 35);
-            this.uiTableLayoutPanel2.Name = "uiTableLayoutPanel2";
-            this.uiTableLayoutPanel2.RowCount = 2;
-            this.uiTableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.32039F));
-            this.uiTableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.67961F));
-            this.uiTableLayoutPanel2.Size = new System.Drawing.Size(649, 515);
-            this.uiTableLayoutPanel2.TabIndex = 18;
-            this.uiTableLayoutPanel2.TagString = null;
-            // 
-            // uiTableLayoutPanel3
-            // 
-            this.uiTableLayoutPanel3.ColumnCount = 3;
-            this.uiTableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.51825F));
-            this.uiTableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65.69343F));
-            this.uiTableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.78832F));
-            this.uiTableLayoutPanel3.Controls.Add(this.Start_Bt, 1, 1);
-            this.uiTableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uiTableLayoutPanel3.Location = new System.Drawing.Point(509, 3);
-            this.uiTableLayoutPanel3.Name = "uiTableLayoutPanel3";
-            this.uiTableLayoutPanel3.RowCount = 3;
-            this.uiTableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35.08065F));
-            this.uiTableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 21.37097F));
-            this.uiTableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 43.14516F));
-            this.uiTableLayoutPanel3.Size = new System.Drawing.Size(137, 248);
-            this.uiTableLayoutPanel3.TabIndex = 18;
-            this.uiTableLayoutPanel3.TagString = null;
-            // 
-            // uiLabel11
-            // 
-            this.uiLabel11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uiLabel11.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.uiLabel11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.uiLabel11.Location = new System.Drawing.Point(3, 164);
-            this.uiLabel11.Name = "uiLabel11";
-            this.uiLabel11.Size = new System.Drawing.Size(85, 41);
-            this.uiLabel11.TabIndex = 6;
-            this.uiLabel11.Text = "RangeProfile_before";
-            this.uiLabel11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // uiLabel12
-            // 
-            this.uiLabel12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uiLabel12.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.uiLabel12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.uiLabel12.Location = new System.Drawing.Point(3, 205);
-            this.uiLabel12.Name = "uiLabel12";
-            this.uiLabel12.Size = new System.Drawing.Size(85, 43);
-            this.uiLabel12.TabIndex = 7;
-            this.uiLabel12.Text = "RangeProfile_after";
-            this.uiLabel12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // uiTextBox5
-            // 
-            this.uiTextBox5.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.uiTextBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uiTextBox5.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.uiTextBox5.Location = new System.Drawing.Point(95, 169);
-            this.uiTextBox5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.uiTextBox5.MinimumSize = new System.Drawing.Size(1, 16);
-            this.uiTextBox5.Name = "uiTextBox5";
-            this.uiTextBox5.Padding = new System.Windows.Forms.Padding(5);
-            this.uiTextBox5.ShowText = false;
-            this.uiTextBox5.Size = new System.Drawing.Size(401, 31);
-            this.uiTextBox5.TabIndex = 8;
-            this.uiTextBox5.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiTextBox5.Watermark = "";
-            this.uiTextBox5.Click += new System.EventHandler(this.SelectFolder_Click);
-            // 
-            // uiTextBox6
-            // 
-            this.uiTextBox6.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.uiTextBox6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.uiTextBox6.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.uiTextBox6.Location = new System.Drawing.Point(95, 210);
-            this.uiTextBox6.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.uiTextBox6.MinimumSize = new System.Drawing.Size(1, 16);
-            this.uiTextBox6.Name = "uiTextBox6";
-            this.uiTextBox6.Padding = new System.Windows.Forms.Padding(5);
-            this.uiTextBox6.ShowText = false;
-            this.uiTextBox6.Size = new System.Drawing.Size(401, 33);
-            this.uiTextBox6.TabIndex = 9;
-            this.uiTextBox6.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
-            this.uiTextBox6.Watermark = "";
-            this.uiTextBox6.Click += new System.EventHandler(this.SelectFolder_Click);
-            // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.TB3_Avg_End_Column_tb);
+            this.tabPage3.Controls.Add(this.uiLabel18);
+            this.tabPage3.Controls.Add(this.uiLabel19);
+            this.tabPage3.Controls.Add(this.TB3_Avg_Start_Column_tb);
             this.tabPage3.Controls.Add(this.TB3_End_Column_tb);
             this.tabPage3.Controls.Add(this.TB3_End_Row_tb);
             this.tabPage3.Controls.Add(this.uiLabel17);
@@ -562,12 +526,60 @@
             this.tabPage3.Text = "RangeProfile";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // TB3_End_Column_tb
+            // 
+            this.TB3_End_Column_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TB3_End_Column_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.TB3_End_Column_tb.Location = new System.Drawing.Point(322, 44);
+            this.TB3_End_Column_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.TB3_End_Column_tb.MinimumSize = new System.Drawing.Size(1, 16);
+            this.TB3_End_Column_tb.Name = "TB3_End_Column_tb";
+            this.TB3_End_Column_tb.Padding = new System.Windows.Forms.Padding(5);
+            this.TB3_End_Column_tb.ShowText = false;
+            this.TB3_End_Column_tb.Size = new System.Drawing.Size(75, 29);
+            this.TB3_End_Column_tb.TabIndex = 30;
+            this.TB3_End_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            this.TB3_End_Column_tb.Watermark = "";
+            // 
+            // TB3_End_Row_tb
+            // 
+            this.TB3_End_Row_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TB3_End_Row_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.TB3_End_Row_tb.Location = new System.Drawing.Point(322, 81);
+            this.TB3_End_Row_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.TB3_End_Row_tb.MinimumSize = new System.Drawing.Size(1, 16);
+            this.TB3_End_Row_tb.Name = "TB3_End_Row_tb";
+            this.TB3_End_Row_tb.Padding = new System.Windows.Forms.Padding(5);
+            this.TB3_End_Row_tb.ShowText = false;
+            this.TB3_End_Row_tb.Size = new System.Drawing.Size(75, 29);
+            this.TB3_End_Row_tb.TabIndex = 31;
+            this.TB3_End_Row_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            this.TB3_End_Row_tb.Watermark = "";
+            // 
+            // uiLabel17
+            // 
+            this.uiLabel17.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.uiLabel17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.uiLabel17.Location = new System.Drawing.Point(232, 87);
+            this.uiLabel17.Name = "uiLabel17";
+            this.uiLabel17.Size = new System.Drawing.Size(100, 24);
+            this.uiLabel17.TabIndex = 33;
+            this.uiLabel17.Text = "End Row:";
+            // 
+            // uiLabel16
+            // 
+            this.uiLabel16.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.uiLabel16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.uiLabel16.Location = new System.Drawing.Point(232, 50);
+            this.uiLabel16.Name = "uiLabel16";
+            this.uiLabel16.Size = new System.Drawing.Size(100, 23);
+            this.uiLabel16.TabIndex = 32;
+            this.uiLabel16.Text = "End Column:";
+            // 
             // TB3_sheet_tb
             // 
             this.TB3_sheet_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TB3_sheet_tb.DoubleValue = 3D;
             this.TB3_sheet_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.TB3_sheet_tb.IntValue = 3;
             this.TB3_sheet_tb.Location = new System.Drawing.Point(118, 5);
             this.TB3_sheet_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TB3_sheet_tb.MinimumSize = new System.Drawing.Size(1, 16);
@@ -576,7 +588,6 @@
             this.TB3_sheet_tb.ShowText = false;
             this.TB3_sheet_tb.Size = new System.Drawing.Size(75, 29);
             this.TB3_sheet_tb.TabIndex = 31;
-            this.TB3_sheet_tb.Text = "3";
             this.TB3_sheet_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.TB3_sheet_tb.Watermark = "";
             // 
@@ -622,16 +633,13 @@
             this.TB3_Start_Column_tb.ShowText = false;
             this.TB3_Start_Column_tb.Size = new System.Drawing.Size(75, 29);
             this.TB3_Start_Column_tb.TabIndex = 28;
-            this.TB3_Start_Column_tb.Text = "p";
             this.TB3_Start_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.TB3_Start_Column_tb.Watermark = "";
             // 
             // TB3_Start_Row_tb
             // 
             this.TB3_Start_Row_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TB3_Start_Row_tb.DoubleValue = 2D;
             this.TB3_Start_Row_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.TB3_Start_Row_tb.IntValue = 2;
             this.TB3_Start_Row_tb.Location = new System.Drawing.Point(118, 81);
             this.TB3_Start_Row_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TB3_Start_Row_tb.MinimumSize = new System.Drawing.Size(1, 16);
@@ -640,63 +648,94 @@
             this.TB3_Start_Row_tb.ShowText = false;
             this.TB3_Start_Row_tb.Size = new System.Drawing.Size(75, 29);
             this.TB3_Start_Row_tb.TabIndex = 29;
-            this.TB3_Start_Row_tb.Text = "2";
             this.TB3_Start_Row_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             this.TB3_Start_Row_tb.Watermark = "";
             // 
-            // uiLabel16
+            // uiTableLayoutPanel2
             // 
-            this.uiLabel16.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.uiLabel16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.uiLabel16.Location = new System.Drawing.Point(232, 50);
-            this.uiLabel16.Name = "uiLabel16";
-            this.uiLabel16.Size = new System.Drawing.Size(100, 23);
-            this.uiLabel16.TabIndex = 32;
-            this.uiLabel16.Text = "End Column:";
+            this.uiTableLayoutPanel2.ColumnCount = 2;
+            this.uiTableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.9661F));
+            this.uiTableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.0339F));
+            this.uiTableLayoutPanel2.Controls.Add(this.uiTabControl1, 0, 1);
+            this.uiTableLayoutPanel2.Controls.Add(this.uiTableLayoutPanel1, 0, 0);
+            this.uiTableLayoutPanel2.Controls.Add(this.uiTableLayoutPanel3, 1, 0);
+            this.uiTableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiTableLayoutPanel2.Location = new System.Drawing.Point(0, 35);
+            this.uiTableLayoutPanel2.Name = "uiTableLayoutPanel2";
+            this.uiTableLayoutPanel2.RowCount = 2;
+            this.uiTableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.32039F));
+            this.uiTableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.67961F));
+            this.uiTableLayoutPanel2.Size = new System.Drawing.Size(649, 515);
+            this.uiTableLayoutPanel2.TabIndex = 18;
+            this.uiTableLayoutPanel2.TagString = null;
             // 
-            // uiLabel17
+            // uiTableLayoutPanel3
             // 
-            this.uiLabel17.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.uiLabel17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            this.uiLabel17.Location = new System.Drawing.Point(232, 87);
-            this.uiLabel17.Name = "uiLabel17";
-            this.uiLabel17.Size = new System.Drawing.Size(100, 24);
-            this.uiLabel17.TabIndex = 33;
-            this.uiLabel17.Text = "End Row:";
+            this.uiTableLayoutPanel3.ColumnCount = 3;
+            this.uiTableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.51825F));
+            this.uiTableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65.69343F));
+            this.uiTableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.78832F));
+            this.uiTableLayoutPanel3.Controls.Add(this.Start_Bt, 1, 1);
+            this.uiTableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiTableLayoutPanel3.Location = new System.Drawing.Point(509, 3);
+            this.uiTableLayoutPanel3.Name = "uiTableLayoutPanel3";
+            this.uiTableLayoutPanel3.RowCount = 3;
+            this.uiTableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35.08065F));
+            this.uiTableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 21.37097F));
+            this.uiTableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 43.14516F));
+            this.uiTableLayoutPanel3.Size = new System.Drawing.Size(137, 248);
+            this.uiTableLayoutPanel3.TabIndex = 18;
+            this.uiTableLayoutPanel3.TagString = null;
             // 
-            // TB3_End_Column_tb
+            // TB3_Avg_End_Column_tb
             // 
-            this.TB3_End_Column_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TB3_End_Column_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.TB3_End_Column_tb.Location = new System.Drawing.Point(322, 44);
-            this.TB3_End_Column_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.TB3_End_Column_tb.MinimumSize = new System.Drawing.Size(1, 16);
-            this.TB3_End_Column_tb.Name = "TB3_End_Column_tb";
-            this.TB3_End_Column_tb.Padding = new System.Windows.Forms.Padding(5);
-            this.TB3_End_Column_tb.ShowText = false;
-            this.TB3_End_Column_tb.Size = new System.Drawing.Size(75, 29);
-            this.TB3_End_Column_tb.TabIndex = 30;
-            this.TB3_End_Column_tb.Text = "jk";
-            this.TB3_End_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
-            this.TB3_End_Column_tb.Watermark = "";
+            this.TB3_Avg_End_Column_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TB3_Avg_End_Column_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.TB3_Avg_End_Column_tb.Location = new System.Drawing.Point(322, 120);
+            this.TB3_Avg_End_Column_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.TB3_Avg_End_Column_tb.MinimumSize = new System.Drawing.Size(1, 16);
+            this.TB3_Avg_End_Column_tb.Name = "TB3_Avg_End_Column_tb";
+            this.TB3_Avg_End_Column_tb.Padding = new System.Windows.Forms.Padding(5);
+            this.TB3_Avg_End_Column_tb.ShowText = false;
+            this.TB3_Avg_End_Column_tb.Size = new System.Drawing.Size(75, 29);
+            this.TB3_Avg_End_Column_tb.TabIndex = 36;
+            this.TB3_Avg_End_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            this.TB3_Avg_End_Column_tb.Watermark = "";
             // 
-            // TB3_End_Row_tb
+            // uiLabel18
             // 
-            this.TB3_End_Row_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.TB3_End_Row_tb.DoubleValue = 11D;
-            this.TB3_End_Row_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.TB3_End_Row_tb.IntValue = 11;
-            this.TB3_End_Row_tb.Location = new System.Drawing.Point(322, 81);
-            this.TB3_End_Row_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.TB3_End_Row_tb.MinimumSize = new System.Drawing.Size(1, 16);
-            this.TB3_End_Row_tb.Name = "TB3_End_Row_tb";
-            this.TB3_End_Row_tb.Padding = new System.Windows.Forms.Padding(5);
-            this.TB3_End_Row_tb.ShowText = false;
-            this.TB3_End_Row_tb.Size = new System.Drawing.Size(75, 29);
-            this.TB3_End_Row_tb.TabIndex = 31;
-            this.TB3_End_Row_tb.Text = "11";
-            this.TB3_End_Row_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
-            this.TB3_End_Row_tb.Watermark = "";
+            this.uiLabel18.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.uiLabel18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.uiLabel18.Location = new System.Drawing.Point(232, 126);
+            this.uiLabel18.Name = "uiLabel18";
+            this.uiLabel18.Size = new System.Drawing.Size(100, 23);
+            this.uiLabel18.TabIndex = 37;
+            this.uiLabel18.Text = "Avg_End Column:";
+            // 
+            // uiLabel19
+            // 
+            this.uiLabel19.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.uiLabel19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.uiLabel19.Location = new System.Drawing.Point(9, 126);
+            this.uiLabel19.Name = "uiLabel19";
+            this.uiLabel19.Size = new System.Drawing.Size(100, 23);
+            this.uiLabel19.TabIndex = 34;
+            this.uiLabel19.Text = "Avg_Start Column:";
+            // 
+            // TB3_Avg_Start_Column_tb
+            // 
+            this.TB3_Avg_Start_Column_tb.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.TB3_Avg_Start_Column_tb.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.TB3_Avg_Start_Column_tb.Location = new System.Drawing.Point(118, 120);
+            this.TB3_Avg_Start_Column_tb.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.TB3_Avg_Start_Column_tb.MinimumSize = new System.Drawing.Size(1, 16);
+            this.TB3_Avg_Start_Column_tb.Name = "TB3_Avg_Start_Column_tb";
+            this.TB3_Avg_Start_Column_tb.Padding = new System.Windows.Forms.Padding(5);
+            this.TB3_Avg_Start_Column_tb.ShowText = false;
+            this.TB3_Avg_Start_Column_tb.Size = new System.Drawing.Size(75, 29);
+            this.TB3_Avg_Start_Column_tb.TabIndex = 35;
+            this.TB3_Avg_Start_Column_tb.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            this.TB3_Avg_Start_Column_tb.Watermark = "";
             // 
             // Form1
             // 
@@ -710,9 +749,9 @@
             this.uiTabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
             this.uiTableLayoutPanel2.ResumeLayout(false);
             this.uiTableLayoutPanel3.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -761,6 +800,10 @@
         private Sunny.UI.UITextBox TB3_End_Row_tb;
         private Sunny.UI.UILabel uiLabel17;
         private Sunny.UI.UILabel uiLabel16;
+        private Sunny.UI.UITextBox TB3_Avg_End_Column_tb;
+        private Sunny.UI.UILabel uiLabel18;
+        private Sunny.UI.UILabel uiLabel19;
+        private Sunny.UI.UITextBox TB3_Avg_Start_Column_tb;
     }
 }
 
